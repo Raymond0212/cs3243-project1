@@ -9,4 +9,4 @@
 3. h3: Number of tiles out of row + Number of tiles out of column
 
 ### Empirical Experiments:
-1. 
+1. How to test solvable: https://math.stackexchange.com/questions/293527/how-to-check-if-a-8-puzzle-is-solvable
