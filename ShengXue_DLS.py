@@ -11,11 +11,27 @@ class Puzzle(object):
         self.actions = list()
         self.visited = set()
         self.p = {}
+        self.foundSolution = False
 
     def solve(self):
         # TODO
         # implement your search algorithm here
-        self.dfs(self.init_state, 0)
+
+        max_recursion_depth = 10
+        lower_bound = 0
+        upper_bound = 10000
+        for max_recursion_depth in range(lower_bound, upper_bound):
+            print("Attempting depth: " + str(max_recursion_depth))
+            self.dfs(self.init_state, 0, max_recursion_depth)
+            if not self.foundSolution:
+                print("Depth " + str(max_recursion_depth) + " failed")
+                self.actions.clear()
+                self.visited.clear()
+                self.p.clear()
+                continue
+            else:
+                break
+
         current_state_str = str(self.goal_state)
         actions_reversed = []
 
@@ -29,11 +45,11 @@ class Puzzle(object):
 
 
 
-    def dfs(self, state, recursion_depth):
-        if recursion_depth > 100:
+    def dfs(self, state, current_recursion_depth, max_recursion_depth):
+        if current_recursion_depth > max_recursion_depth:
             pass
         elif self.isSolved(state):
-            pass
+            self.foundSolution = True
         else:
             state_str = str(state)
             self.visited.add(state_str)
@@ -43,7 +59,7 @@ class Puzzle(object):
                     neighbour_state_str = str(neighbour_state)
                     if neighbour_state_str not in self.visited:
                         self.p[neighbour_state_str] = (state_str, direction)
-                        self.dfs(neighbour_state, recursion_depth + 1)
+                        self.dfs(neighbour_state, current_recursion_depth + 1, max_recursion_depth)
 
     def isSolved(self, state):
         goal_state_str = str(self.goal_state)

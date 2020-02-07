@@ -45,7 +45,7 @@ def printstate(state):
             s = ""
             for col in state[row]:
                 s += str(col) + " "
-            print(s)
+            print(s.strip())
 
 if __name__ == "__main__":
     # Instantiate a 2D list of size n x n
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     max_num = n ** 2 - 1
 
     #num_of_shuffles = randint(100, 200)
-    num_of_shuffles = 50
+    num_of_shuffles = 10000
     directions = ["RIGHT", "LEFT", "UP", "DOWN"]
 
     for i in range(1, max_num + 1):
