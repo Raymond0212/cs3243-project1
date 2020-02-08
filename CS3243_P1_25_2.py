@@ -6,6 +6,11 @@ import heapq
 import time
 import copy
 
+"""
+Node is a class which is used to store each node
+It contains the state, estimated cost, search depth, parent, move of current node.
+__str__, __eq__, __ne__, __lt__, __gt__, __le__, __ge__ are overided
+"""
 class Node:
     def __init__(self, state, cost, depth, parent, move = None):
         self.state = state
@@ -55,10 +60,13 @@ class Puzzle(object):
         # you may add more attributes if you think is useful
         self.init_state = init_state
         self.goal_state = goal_state
-        self.actions = list()
+        self.actions = list()   # List of actions
         self.size = len(init_state)
-        self.visited = {tuple(map(tuple, init_state))}
+        self.visited = {tuple(map(tuple, init_state))} # Check is the state has appeared or not
 
+    """
+    Find the position of the blank
+    """
     def blank_location(self, puzzle):
         for x, row in enumerate(puzzle):
             for y, tile in enumerate(row):
@@ -71,6 +79,9 @@ class Puzzle(object):
         explored = []
         MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
+        """
+        This is the core part of A*
+        """
         def inner():
             current = heapq.heappop(heap)
             if current.depth >= 300:
@@ -173,7 +184,7 @@ if __name__ == "__main__":
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
 
-    print(ans)
+    print(ans) # Currently I just print the depth of the search
 
     # with open(sys.argv[2], 'a') as f:
     #     for answer in ans:
