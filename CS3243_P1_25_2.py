@@ -136,9 +136,12 @@ class Puzzle(object):
     return the estimated steps
     """
     def heuristic(self, puzzle):
-       return self.misplace_count(puzzle)
+        return self.misplace_count(puzzle)
 
     def heuristic2(self, puzzle):
+        """
+            sum of Q1!
+        """
         size = len(puzzle)
         ans = 0
         for i in range(size):
@@ -150,31 +153,47 @@ class Puzzle(object):
 
     def heuristic3(self, state):
         puzzle = copy.deepcopy(state)
-        size = len(puzzle)
+        size = len(puzzle) ** 2
         ans = 0
-        for i in range(1, size):
-            goal_x, goal_y = locate_tile(self.goal_state, i)
-            current_x, current_y = locate_tile(puzzle, i)
-            if goal_x == current_x and goal_y == current_y:
-                continue
-            blank_x, blank_y = locate_tile(puzzle, 0)
-            puzzle[blank_x][blank_y] = puzzle[current_x][current_y]
-            puzzle[current_x][current_y] = puzzle[goal_x][goal_y]
-            puzzle[goal_x][goal_y] = puzzle[blank_x][blank_y]
-            puzzle[blank_x][blank_y] = 0
-            ans += 1
-            
+
+        goal_blank_x, goal_blank_y = locate_tile(self.goal_state, 0)
+        current_blank_x, current_blank_y = locate_tile(puzzle, 0)
+
+        def place_zero(current_blank_x, current_blank_y):
+            # 1-step swap: swap with 0 once to the goal state
+            while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
+                goal_idx = goal_state[current_blank_x][current_blank_y]
+                current_goal_x, current_goal_y = locate_tile(puzzle, goal_idx)
+
+                puzzle[current_blank_x][current_blank_y] = goal_idx
+                puzzle[current_goal_x][current_goal_y] = 0
+                ans += 1
+                current_blank_x, current_blank_y = locate_tile(puzzle, 0)
+
+        place_zero(current_blank_x, current_blank_y)
+
+        for curr_x in range(0, size):
+            for curr_y in range(0, size):
+                if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
+                    continue
+
+                current_blank_x, current_blank_y = locate_tile(puzzle, 0)
+                puzzle[curr_x][curr_y] = 0
+                puzzle[current_blank_x][current_blank_y] = puzzle[curr_x][curr_y]
+                ans += 1
+                ans += place_zero(curr_x, curr_y)
+
         return ans
 
     def heuristic3(self, state):
         puzzle = copy.deepcopy(state)
-        size = len(puzzle)
+        size = len(puzzle) ** 2
         ans = 0
         for i in range(1, size):
             goal_x, goal_y = locate_tile(self.goal_state, i)
             current_x, current_y = locate_tile(puzzle, i)
-            ans += (goal_x == current_x)?0:1
-            ans += (goal_y == current_y)?0:1
+            ans += 0 if goal_x == current_x else 1
+            ans += 0 if goal_y == current_y else 1
                         
         return ans
             
