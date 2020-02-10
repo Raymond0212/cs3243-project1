@@ -145,8 +145,8 @@ class Puzzle(object):
         size = len(puzzle)
         ans = 0
         for i in range(size):
-            current_x, current_y = locate_tile(puzzle, i)
-            goal_x, goal_y = locate_tile(self.goal_state, i)
+            current_x, current_y = self.locate_tile(puzzle, i)
+            goal_x, goal_y = self.locate_tile(self.goal_state, i)
             ans += abs(current_x-goal_x)+abs(current_y-goal_y)
 
         return ans
@@ -156,19 +156,23 @@ class Puzzle(object):
         size = len(puzzle) ** 2
         ans = 0
 
-        goal_blank_x, goal_blank_y = locate_tile(self.goal_state, 0)
-        current_blank_x, current_blank_y = locate_tile(puzzle, 0)
+        goal_blank_x, goal_blank_y = self.locate_tile(self.goal_state, 0)
+        current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
 
         def place_zero(current_blank_x, current_blank_y):
             # 1-step swap: swap with 0 once to the goal state
+            ans = 0
+
             while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
                 goal_idx = goal_state[current_blank_x][current_blank_y]
-                current_goal_x, current_goal_y = locate_tile(puzzle, goal_idx)
+                current_goal_x, current_goal_y = self.locate_tile(puzzle, goal_idx)
 
                 puzzle[current_blank_x][current_blank_y] = goal_idx
                 puzzle[current_goal_x][current_goal_y] = 0
                 ans += 1
-                current_blank_x, current_blank_y = locate_tile(puzzle, 0)
+                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+
+            return ans
 
         place_zero(current_blank_x, current_blank_y)
 
@@ -177,21 +181,21 @@ class Puzzle(object):
                 if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
                     continue
 
-                current_blank_x, current_blank_y = locate_tile(puzzle, 0)
-                puzzle[curr_x][curr_y] = 0
+                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
                 puzzle[current_blank_x][current_blank_y] = puzzle[curr_x][curr_y]
+                puzzle[curr_x][curr_y] = 0
                 ans += 1
                 ans += place_zero(curr_x, curr_y)
 
         return ans
 
-    def heuristic3(self, state):
+    def heuristic4(self, state):
         puzzle = copy.deepcopy(state)
         size = len(puzzle) ** 2
         ans = 0
         for i in range(1, size):
-            goal_x, goal_y = locate_tile(self.goal_state, i)
-            current_x, current_y = locate_tile(puzzle, i)
+            goal_x, goal_y = self.locate_tile(self.goal_state, i)
+            current_x, current_y = self.locate_tile(puzzle, i)
             ans += 0 if goal_x == current_x else 1
             ans += 0 if goal_y == current_y else 1
                         
