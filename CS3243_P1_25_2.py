@@ -142,7 +142,7 @@ class Puzzle(object):
         """
             sum of Q1!
         """
-        size = len(puzzle)
+        size = len(puzzle) ** 2
         ans = 0
         for i in range(size):
             current_x, current_y = self.locate_tile(puzzle, i)
@@ -164,7 +164,7 @@ class Puzzle(object):
             ans = 0
 
             while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
-                goal_idx = goal_state[current_blank_x][current_blank_y]
+                goal_idx = self.goal_state[current_blank_x][current_blank_y]
                 current_goal_x, current_goal_y = self.locate_tile(puzzle, goal_idx)
 
                 puzzle[current_blank_x][current_blank_y] = goal_idx
@@ -176,8 +176,8 @@ class Puzzle(object):
 
         place_zero(current_blank_x, current_blank_y)
 
-        for curr_x in range(0, size):
-            for curr_y in range(0, size):
+        for curr_x in range(0, len(puzzle)):
+            for curr_y in range(0, len(puzzle)):
                 if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
                     continue
 
@@ -247,6 +247,7 @@ if __name__ == "__main__":
 
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
+
 
     print(ans) # Currently I just print the depth of the search
 
