@@ -67,10 +67,10 @@ class Puzzle(object):
     """
     Find the position of the blank
     """
-    def blank_location(self, puzzle):
+    def locate_tile(self, puzzle, a):
         for x, row in enumerate(puzzle):
             for y, tile in enumerate(row):
-                if tile == 0:
+                if tile == a:
                     return (x, y)
     
     def solve(self): #Astar
@@ -87,7 +87,7 @@ class Puzzle(object):
             if current.depth >= 300:
                 return None
             explored.append(current)
-            blank_x, blank_y  = self.blank_location(current.state)
+            blank_x, blank_y  = self.locate_tile(current.state, 0)
             
             for i in range(4):
                 puzzle = copy.deepcopy(current.state)
@@ -137,6 +137,47 @@ class Puzzle(object):
     """
     def heuristic(self, puzzle):
        return self.misplace_count(puzzle)
+
+    def heuristic2(self, puzzle):
+        size = len(puzzle)
+        ans = 0
+        for i in range(size):
+            current_x, current_y = locate_tile(puzzle, i)
+            goal_x, goal_y = locate_tile(self.goal_state, i)
+            ans += abs(current_x-goal_x)+abs(current_y-goal_y)
+
+        return ans
+
+    def heuristic3(self, state):
+        puzzle = copy.deepcopy(state)
+        size = len(puzzle)
+        ans = 0
+        for i in range(1, size):
+            goal_x, goal_y = locate_tile(self.goal_state, i)
+            current_x, current_y = locate_tile(puzzle, i)
+            if goal_x == current_x and goal_y == current_y:
+                continue
+            blank_x, blank_y = locate_tile(puzzle, 0)
+            puzzle[blank_x][blank_y] = puzzle[current_x][current_y]
+            puzzle[current_x][current_y] = puzzle[goal_x][goal_y]
+            puzzle[goal_x][goal_y] = puzzle[blank_x][blank_y]
+            puzzle[blank_x][blank_y] = 0
+            ans += 1
+            
+        return ans
+
+    def heuristic3(self, state):
+        puzzle = copy.deepcopy(state)
+        size = len(puzzle)
+        ans = 0
+        for i in range(1, size):
+            goal_x, goal_y = locate_tile(self.goal_state, i)
+            current_x, current_y = locate_tile(puzzle, i)
+            ans += (goal_x == current_x)?0:1
+            ans += (goal_y == current_y)?0:1
+                        
+        return ans
+            
 
 if __name__ == "__main__":
     # do NOT modify below
