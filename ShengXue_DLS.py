@@ -1,6 +1,7 @@
 import copy
 import os
 import sys
+import time
 
 
 class Puzzle(object):
@@ -12,17 +13,18 @@ class Puzzle(object):
         self.visited = set()
         self.p = {}
         self.foundSolution = False
+        self.totalNodes = 0
 
     def solve(self):
         # TODO
         # implement your search algorithm here
-
         max_recursion_depth = 10
         lower_bound = 0
         upper_bound = 10000
         for max_recursion_depth in range(lower_bound, upper_bound):
             print("Attempting depth: " + str(max_recursion_depth))
             self.dfs(self.init_state, 0, max_recursion_depth)
+            print("Total nodes so far: " + str(self.totalNodes))
             if not self.foundSolution:
                 print("Depth " + str(max_recursion_depth) + " failed")
                 self.actions.clear()
@@ -49,8 +51,10 @@ class Puzzle(object):
         if current_recursion_depth > max_recursion_depth:
             pass
         elif self.isSolved(state):
+            self.totalNodes = self.totalNodes + 1
             self.foundSolution = True
         else:
+            self.totalNodes = self.totalNodes + 1
             state_str = str(state)
             self.visited.add(state_str)
             for direction in ["RIGHT", "LEFT", "UP", "DOWN"]:
@@ -112,6 +116,8 @@ class Puzzle(object):
 
 
 if __name__ == "__main__":
+    start = time.process_time()
+
     # do NOT modify below
 
     # argv[0] represents the name of the file that is being executed
@@ -155,6 +161,8 @@ if __name__ == "__main__":
 
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
+
+    print(time.process_time() - start)
 
     with open(sys.argv[2], 'w') as f:
         for answer in ans:
