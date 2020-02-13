@@ -14,3 +14,4 @@
 
 ### Empirical Experiments:
 1. How to test solvable: https://math.stackexchange.com/questions/293527/how-to-check-if-a-8-puzzle-is-solvable
+2. How to test if there is a solution or not: https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html

@@ -202,9 +202,10 @@ if __name__ == "__main__":
         goal_state[(i-1)//n][(i-1)%n] = i
     goal_state[n - 1][n - 1] = 0
 
+    print(time.asctime())
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
-
+    print(time.asctime())
 
     print(ans) # Currently I just print the depth of the search
 
