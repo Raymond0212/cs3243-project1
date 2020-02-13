@@ -73,19 +73,10 @@ class Puzzle(object):
                 if tile == a:
                     return (x, y)
     
-    result = []
-
-    def show_path(self, head):
-        if type(head.parent) == Node:
-            self.show_path(head.parent)
-        if head.move != None:
-            self.result.append(head.move)
-
     def solve(self): #Astar
         heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
         heapq.heapify(heap)
         explored = []
-        ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
         MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
         """
@@ -111,7 +102,7 @@ class Puzzle(object):
                 if tuple(map(tuple, puzzle)) in self.visited:
                     continue
                 self.visited.add(tuple(map(tuple,puzzle)))
-                next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
+                next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, MOVE[i])
                 heapq.heappush(heap, next_node)
                 if self.misplace_count(next_node.state) == 0:
                     return next_node
@@ -121,8 +112,7 @@ class Puzzle(object):
         while len(heap) != 0:
             ans = inner()
             if ans != None:
-                self.show_path(ans)
-                return self.result
+                return ans.depth
                 
         return "Not Found"
 
@@ -144,20 +134,20 @@ class Puzzle(object):
     """
     implement heuristic functions here
     return the estimated steps
-    Manhattan
+    h3: Number of tiles out of row + Number of tiles out of column
     """
-    def heuristic(self, puzzle):
-        """
-            sum of Q1!
-        """
+    def heuristic(self, state):
+        puzzle = copy.deepcopy(state)
         size = len(puzzle) ** 2
         ans = 0
-        for i in range(size):
-            current_x, current_y = self.locate_tile(puzzle, i)
+        for i in range(1, size):
             goal_x, goal_y = self.locate_tile(self.goal_state, i)
-            ans += abs(current_x-goal_x)+abs(current_y-goal_y)
-
+            current_x, current_y = self.locate_tile(puzzle, i)
+            ans += 0 if goal_x == current_x else 1
+            ans += 0 if goal_y == current_y else 1
+                        
         return ans
+            
 
 if __name__ == "__main__":
     # do NOT modify below

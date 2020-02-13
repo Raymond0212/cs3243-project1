@@ -73,19 +73,10 @@ class Puzzle(object):
                 if tile == a:
                     return (x, y)
     
-    result = []
-
-    def show_path(self, head):
-        if type(head.parent) == Node:
-            self.show_path(head.parent)
-        if head.move != None:
-            self.result.append(head.move)
-
     def solve(self): #Astar
         heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
         heapq.heapify(heap)
         explored = []
-        ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
         MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
         """
@@ -111,7 +102,7 @@ class Puzzle(object):
                 if tuple(map(tuple, puzzle)) in self.visited:
                     continue
                 self.visited.add(tuple(map(tuple,puzzle)))
-                next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
+                next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, MOVE[i])
                 heapq.heappush(heap, next_node)
                 if self.misplace_count(next_node.state) == 0:
                     return next_node
@@ -121,8 +112,7 @@ class Puzzle(object):
         while len(heap) != 0:
             ans = inner()
             if ans != None:
-                self.show_path(ans)
-                return self.result
+                return ans.depth
                 
         return "Not Found"
 
@@ -144,18 +134,42 @@ class Puzzle(object):
     """
     implement heuristic functions here
     return the estimated steps
-    Manhattan
+    h2: n-Max Swap
     """
-    def heuristic(self, puzzle):
-        """
-            sum of Q1!
-        """
-        size = len(puzzle) ** 2
+    def heuristic(self, state):
+        puzzle = copy.deepcopy(state)
         ans = 0
-        for i in range(size):
-            current_x, current_y = self.locate_tile(puzzle, i)
-            goal_x, goal_y = self.locate_tile(self.goal_state, i)
-            ans += abs(current_x-goal_x)+abs(current_y-goal_y)
+
+        goal_blank_x, goal_blank_y = self.locate_tile(self.goal_state, 0)
+        current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+
+        def place_zero(current_blank_x, current_blank_y):
+            # 1-step swap: swap with 0 once to the goal state
+            ans = 0
+
+            while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
+                goal_idx = self.goal_state[current_blank_x][current_blank_y]
+                current_goal_x, current_goal_y = self.locate_tile(puzzle, goal_idx)
+
+                puzzle[current_blank_x][current_blank_y] = goal_idx
+                puzzle[current_goal_x][current_goal_y] = 0
+                ans += 1
+                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+
+            return ans
+
+        place_zero(current_blank_x, current_blank_y)
+
+        for curr_x in range(0, len(puzzle)):
+            for curr_y in range(0, len(puzzle)):
+                if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
+                    continue
+
+                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+                puzzle[current_blank_x][current_blank_y] = puzzle[curr_x][curr_y]
+                puzzle[curr_x][curr_y] = 0
+                ans += 1
+                ans += place_zero(curr_x, curr_y)
 
         return ans
 
