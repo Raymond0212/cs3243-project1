@@ -76,9 +76,9 @@ class Puzzle(object):
     result = []
 
     def show_path(self, head):
-        if type(head.parent) == Node:
+        if head.parent is not None:
             self.show_path(head.parent)
-        if head.move != None:
+        if head.move is not None:
             self.result.append(head.move)
 
     def solve(self): #Astar
@@ -120,7 +120,7 @@ class Puzzle(object):
 
         while len(heap) != 0:
             ans = inner()
-            if ans != None:
+            if ans is not None:
                 self.show_path(ans)
                 return self.result
                 
@@ -207,8 +207,8 @@ if __name__ == "__main__":
     ans = puzzle.solve()
     print(time.asctime())
 
-    print(ans) # Currently I just print the depth of the search
+    # print(ans) # Currently I just print the depth of the search
 
-    # with open(sys.argv[2], 'a') as f:
-    #     for answer in ans:
-    #         f.write(answer+'\n')
+    with open(sys.argv[2], 'a') as f:
+        for answer in ans:
+            f.write(answer+'\n')
