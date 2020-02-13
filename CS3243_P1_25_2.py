@@ -79,6 +79,7 @@ class Puzzle(object):
         if head.parent is not None:
             self.show_path(head.parent)
         if head.move is not None:
+            # print(head)
             self.result.append(head.move)
 
     def solve(self): #Astar
@@ -93,6 +94,8 @@ class Puzzle(object):
         """
         def inner():
             current = heapq.heappop(heap)
+            if self.misplace_count(current.state) == 0:
+                return current
             if current.depth >= 300:
                 return None
             explored.append(current)
@@ -113,8 +116,6 @@ class Puzzle(object):
                 self.visited.add(tuple(map(tuple,puzzle)))
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
                 heapq.heappush(heap, next_node)
-                if self.misplace_count(next_node.state) == 0:
-                    return next_node
 
             return None
 
