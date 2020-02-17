@@ -92,12 +92,12 @@ class Puzzle(object):
         """
         This is the core part of A*
         """
-        def inner():
+        while len(heap) != 0:
             current = heapq.heappop(heap)
             if self.misplace_count(current.state) == 0:
-                return current
-            if current.depth >= 300:
-                return None
+                self.show_path(current)
+                return self.result
+
             explored.append(current)
             blank_x, blank_y  = self.locate_tile(current.state, 0)
             
@@ -116,16 +116,8 @@ class Puzzle(object):
                 self.visited.add(tuple(map(tuple,puzzle)))
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
                 heapq.heappush(heap, next_node)
-
-            return None
-
-        while len(heap) != 0:
-            ans = inner()
-            if ans is not None:
-                self.show_path(ans)
-                return self.result
                 
-        return "Not Found"
+        return "No Answer"
 
     '''
     misplace_count is used to count all misplaced tiles.
