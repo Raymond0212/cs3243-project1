@@ -62,7 +62,7 @@ class Puzzle(object):
         self.goal_state = goal_state
         self.actions = list()   # List of actions
         self.size = len(init_state)
-        self.visited = {tuple(map(tuple, init_state))} # Check is the state has appeared or not
+        self.visited = set() # Check is the state has appeared or not
 
     """
     Find the position of the blank
@@ -83,9 +83,11 @@ class Puzzle(object):
             self.result.append(head.move)
 
     def solve(self): #Astar
+        def tuplize(puzzle):
+            return tuple(map(tuple, puzzle))
+
         heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
         heapq.heapify(heap)
-        explored = []
         ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
         MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -93,14 +95,19 @@ class Puzzle(object):
         This is the core part of A*
         """
         def inner():
+            # get the node with least cost that has NOT been explored
             current = heapq.heappop(heap)
+            while tuplize(current.state) in self.visited:
+                current = heapq.heappop(heap)
+
             if self.misplace_count(current.state) == 0:
                 return current
             if current.depth >= 300:
                 return None
-            explored.append(current)
+
             blank_x, blank_y  = self.locate_tile(current.state, 0)
-            
+
+            # explore neighbours of the node
             for i in range(4):
                 puzzle = copy.deepcopy(current.state)
                 dx, dy = MOVE[i]
@@ -111,12 +118,16 @@ class Puzzle(object):
                     continue
                 puzzle[blank_x][blank_y] = puzzle[blank_x+dx][blank_y+dy]
                 puzzle[blank_x+dx][blank_y+dy] = 0
-                if tuple(map(tuple, puzzle)) in self.visited:
+
+                # if the neighbour has been explored, there is no need to consider it again
+                if tuplize(puzzle) in self.visited:
                     continue
-                self.visited.add(tuple(map(tuple,puzzle)))
+
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
                 heapq.heappush(heap, next_node)
 
+            # mark current node as explored
+            self.visited.add(tuplize(current.state))
             return None
 
         while len(heap) != 0:
