@@ -1,6 +1,7 @@
 import copy
 import os
 import sys
+import time
 
 frontierQueue = []
 directions = ["UP", "DOWN", "LEFT", "RIGHT"]
@@ -14,13 +15,16 @@ class Puzzle(object):
         self.actions = list()
 
     def solve(self):
+        start = time.time()
         # TODO
         # implement your search algorithm here
+        count = 0
         frontierQueue.insert(len(frontierQueue), [self.init_state, self.actions])
         sol = list()
         while len(frontierQueue) != 0:
             p = frontierQueue.pop(0)
-            visited.add(str(p[0]))
+            # visited.add(str(p[0]))
+            visited.add(tuple(map(tuple, p[0])))
             if p[0] == self.goal_state:
                 sol = p[1]
                 break
@@ -29,7 +33,7 @@ class Puzzle(object):
                     self.init_state = p[0]
                     newState = self.move(directions[x], p[0])
                     if newState is not None:
-                        if str(newState) not in visited:
+                        if tuple(map(tuple, newState)) not in visited:
                             if len(p[1]) == 0:
                                 newList = list()
                                 newList.append(directions[x])
@@ -38,6 +42,12 @@ class Puzzle(object):
                                 newList = copy.deepcopy(p[1])
                                 newList.append(directions[x])
                                 frontierQueue.insert(len(frontierQueue), [newState, newList])
+                                count = count + 1
+        end = time.time()
+        print("total nodes: ")
+        print(count)
+        print("time")
+        print(end-start)
         return sol
 
     # you may add more functions if you think is useful
@@ -124,3 +134,4 @@ if __name__ == "__main__":
     with open(sys.argv[2], 'a') as f:
         for answer in ans:
             f.write(answer + '\n')
+
