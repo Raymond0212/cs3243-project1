@@ -102,7 +102,7 @@ class Puzzle(object):
             blank_x, blank_y  = self.locate_tile(current.state, 0)
             
             for i in range(4):
-                puzzle = copy.deepcopy(current.state)
+                puzzle = copy.deepcopy(current.state) 
                 dx, dy = MOVE[i]
                 if blank_x + dx < 0\
                    or blank_x + dx >= self.size\
@@ -195,13 +195,17 @@ if __name__ == "__main__":
         goal_state[(i-1)//n][(i-1)%n] = i
     goal_state[n - 1][n - 1] = 0
 
-    print(time.asctime())
+    start = time.time()
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
-    print(time.asctime())
+    end = time.time()
+    print("%.4f"%(end-start))
+
+    print(len(ans))
+    print(len(puzzle.visited))
 
     # print(ans) # Currently I just print the depth of the search
 
-    with open(sys.argv[2], 'a') as f:
-        for answer in ans:
-            f.write(answer+'\n')
+    # with open(sys.argv[2], 'a') as f:
+    #     for answer in ans:
+    #         f.write(answer+'\n')
