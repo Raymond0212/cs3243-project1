@@ -60,9 +60,16 @@ class Puzzle(object):
         # you may add more attributes if you think is useful
         self.init_state = init_state
         self.goal_state = goal_state
-        self.actions = list()   # List of actions
+        # self.actions = list()   # List of actions
         self.size = len(init_state)
         self.visited = {tuple(map(tuple, init_state))} # Check is the state has appeared or not
+        self.explored = []
+        self.result = []
+        self.heap = []
+        self.goal_position = {}
+        for x, row in enumerate(goal_state):
+            for y, ele in enumerate(row):
+                self.goal_position[ele] = (x, y)
 
     """
     Find the position of the blank
@@ -72,8 +79,6 @@ class Puzzle(object):
             for y, tile in enumerate(row):
                 if tile == a:
                     return (x, y)
-    
-    result = []
 
     def show_path(self, head):
         if head.parent is not None:
@@ -83,25 +88,29 @@ class Puzzle(object):
             self.result.append(head.move)
 
     def solve(self): #Astar
-        heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
-        heapq.heapify(heap)
-        explored = []
-        ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
-        MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
+        self.heap = [(source.cost, source)]
+        heapq.heapify(self.heap)
+        # ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
+        # MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
+        MOVE = [(1, 0), (0, 1), (0, -1), (-1, 0)]
 
         """
         This is the core part of A*
         """
-        while len(heap) != 0:
-            current = heapq.heappop(heap)
+        while len(self.heap) != 0:
+            current = heapq.heappop(self.heap)[1]
             if self.misplace_count(current.state) == 0:
                 self.show_path(current)
                 return self.result
 
-            explored.append(current)
+            self.explored.append(current)
             blank_x, blank_y  = self.locate_tile(current.state, 0)
             
             for i in range(4):
+                if current.move is not None and i == (3-ACTION.index(current.move)):    #Don't move back
+                    continue
                 puzzle = copy.deepcopy(current.state) 
                 dx, dy = MOVE[i]
                 if blank_x + dx < 0\
@@ -115,9 +124,9 @@ class Puzzle(object):
                     continue
                 self.visited.add(tuple(map(tuple,puzzle)))
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
-                heapq.heappush(heap, next_node)
+                heapq.heappush(self.heap, (next_node.cost, next_node))
                 
-        return "No Answer"
+        return ["No Answer"]
 
     '''
     misplace_count is used to count all misplaced tiles.
@@ -140,15 +149,10 @@ class Puzzle(object):
     Manhattan
     """
     def heuristic(self, puzzle):
-        """
-            sum of Q1!
-        """
-        size = len(puzzle) ** 2
         ans = 0
-        for i in range(size):
-            current_x, current_y = self.locate_tile(puzzle, i)
-            goal_x, goal_y = self.locate_tile(self.goal_state, i)
-            ans += abs(current_x-goal_x)+abs(current_y-goal_y)
+        for x, row in enumerate(puzzle):
+            for y, ele in enumerate(row):
+                ans += abs(self.goal_position[ele][0]-x)+abs(self.goal_position[ele][1]-y)
 
         return ans
 
@@ -202,7 +206,9 @@ if __name__ == "__main__":
     print("%.4f"%(end-start))
 
     print(len(ans))
-    print(len(puzzle.visited))
+    print("# of duplicated state:", len(puzzle.visited))
+    print("# of explored nodes:", len(puzzle.explored))
+    print("# of generated nodes:", len(puzzle.explored)+len(puzzle.heap))
 
     # print(ans) # Currently I just print the depth of the search
 
