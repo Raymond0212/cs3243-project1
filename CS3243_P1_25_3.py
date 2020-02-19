@@ -172,36 +172,33 @@ class Puzzle(object):
         puzzle = self.listify(state)
         ans = 0
 
-        goal_blank_x, goal_blank_y = self.locate_tile(self.goal_state, 0)
-        current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+        misplaced_idx_dict = {}
+        for i in range(self.size):
+            for j in range(self.size):
+                curr = puzzle[i][j]
+                if curr != self.goal_state[i][j]:
+                    misplaced_idx_dict[curr] = (i, j)
 
-        def place_zero(current_blank_x, current_blank_y):
-            # 1-step swap: swap with 0 once to the goal state
-            ans = 0
+        while len(misplaced_idx_dict) != 0:
+            if 0 in misplaced_idx_dict:
+                curr_blank_x, curr_blank_y = misplaced_idx_dict[0]
+                goal = self.goal_state[curr_blank_x][curr_blank_y]
 
-            while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
-                goal_idx = self.goal_state[current_blank_x][current_blank_y]
-                current_goal_x, current_goal_y = self.locate_tile(puzzle, goal_idx)
-
-                puzzle[current_blank_x][current_blank_y] = goal_idx
-                puzzle[current_goal_x][current_goal_y] = 0
+                # swap 0 and goal, remove goal from misplaced
+                misplaced_idx_dict[0] = misplaced_idx_dict[goal]
+                misplaced_idx_dict[goal] = (curr_blank_x, curr_blank_y)
+                del misplaced_idx_dict[goal]
                 ans += 1
-                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+                continue
+            else:
+                curr_blank_x, curr_blank_y = self.goal_position[0]
+                goal = misplaced_idx_dict.keys()[0]
 
-            return ans
-
-        place_zero(current_blank_x, current_blank_y)
-
-        for curr_x in range(0, len(puzzle)):
-            for curr_y in range(0, len(puzzle)):
-                if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
-                    continue
-
-                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
-                puzzle[current_blank_x][current_blank_y] = puzzle[curr_x][curr_y]
-                puzzle[curr_x][curr_y] = 0
+                # swap 0 and goal, add 0 into misplaced
+                misplaced_idx_dict[0] = misplaced_idx_dict[goal]
+                misplaced_idx_dict[goal] = (curr_blank_x, curr_blank_y)
                 ans += 1
-                ans += place_zero(curr_x, curr_y)
+                continue
 
         return ans
 
