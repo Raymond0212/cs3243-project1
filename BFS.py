@@ -8,6 +8,9 @@ directions = ["UP", "DOWN", "LEFT", "RIGHT"]
 visited = set()
 totalNodes = 0
 totalTime = 0
+numOfDupStates = 0
+numOfExploredNodes = 0
+numOfGenNodes = 0
 
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
@@ -24,7 +27,7 @@ class Puzzle(object):
                 self.rank[ele] = x*self.size+y
 
     def solve(self):
-        global totalTime, totalNodes
+        global totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
         visited.clear()
         frontierQueue.clear()
         if (self.solvability(self.init_state) == False):
@@ -34,9 +37,6 @@ class Puzzle(object):
             # TODOdsc
             # implement your search algorithm here
             count = 0
-            numOfDupStates = 0
-            numOfExploredNodes = 0
-            numOfGenNodes = 0
             frontierQueue.insert(len(frontierQueue), [self.init_state, self.actions])
             sol = list()
             while len(frontierQueue) != 0:
@@ -68,10 +68,6 @@ class Puzzle(object):
         end = time.time()
         totalNodes = count
         totalTime = end - start
-
-        print("# of duplicated state:", numOfDupStates)
-        print("# of explored nodes:", numOfExploredNodes)
-        print("# of generated nodes:", numOfGenNodes)
         return sol
 
     # you may add more functions if you think is useful
@@ -228,4 +224,4 @@ class MyTester(object):
         puzzle = Puzzle(init_state, goal_state)
         solution = puzzle.solve()
 
-        return totalNodes, totalTime, solution
+        return totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes

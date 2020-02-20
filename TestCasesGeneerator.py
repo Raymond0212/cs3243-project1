@@ -96,42 +96,50 @@ def genTestCase(n, id):
 
     return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
 
-if __name__ == "__main__":
-    # Empty file first :')
-    n_size = 3
-    with open("summary_BFS.txt", 'w') as f:
+def engine(n_size, num_of_cases, algo_name):
+    with open("summary_" + algo_name + ".txt", 'w') as f:
         f.write("{}")
 
-    for i in range(4, 11):
-        genTestCase(3, i)
+    for i in range(1, num_of_cases):
+        genTestCase(n_size, i)
 
 
-    for i in range (1, 11):
+    for i in range (1, num_of_cases):
         inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         myTester = MyTester(inputFile)
-        #myTester returns a tuple containing totalNodes, totalTime and solution
-        totalNodes_totalTime_solution = myTester.test()
+        #myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        resultsTuple = myTester.test()
 
         #testPls is a function that runs the solution found in the outputFile to see if the answer is correct
-        passedTestCase = testPls(n_size, inputFile, totalNodes_totalTime_solution[2])
+        passedTestCase = testPls(n_size, inputFile, resultsTuple[2])
         testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         data = {}
-        with open("summary.txt", 'r') as f:
+        with open("summary_" + algo_name + ".txt", 'r') as f:
             data = json.loads(f.read())  # data becomes a dictionary
 
         newTestCase = {
-            "algorithm": "BFS",
-            "totalNodes": totalNodes_totalTime_solution[0],
-            "totalTime": totalNodes_totalTime_solution[1],
-            "solution": totalNodes_totalTime_solution[2],
+            "algorithm": algo_name,
+            "self.node_generated": resultsTuple[3],
+            "self.node_visited": resultsTuple[4],
+            "self.state_duplicated": resultsTuple[5],
+            "self.total_nodes": resultsTuple[0],
+            "self.total_time": resultsTuple[1],
+            "solution": resultsTuple[2],
             "isSolutionCorrect": passedTestCase
         }
 
         newTestCaseJson = json.dumps(newTestCase, indent=4, sort_keys=True)
         data[testName] = newTestCase
 
-        with open("summary_BFS.txt", 'w') as f:
+        with open("summary_" + algo_name + ".txt", 'w') as f:
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+
+if __name__ == "__main__":
+    # Empty file first :')
+    n_size = 3
+    num_of_cases = 10
+    algo_name = "BFS"
+    engine(n_size, num_of_cases, algo_name)
 
 
 
