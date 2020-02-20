@@ -11,8 +11,10 @@ Node is a class which is used to store each node
 It contains the state, estimated cost, search depth, parent, move of current node.
 __str__, __eq__, __ne__, __lt__, __gt__, __le__, __ge__ are overided
 """
+
+
 class Node:
-    def __init__(self, state, cost, depth, parent, move = None):
+    def __init__(self, state, cost, depth, parent, move=None):
         self.state = state
         self.cost = cost
         self.parent = parent
@@ -20,16 +22,16 @@ class Node:
         self.move = move
 
     def __str__(self):
-        output = "DEPTH: " + str(self.depth)+ " | COST: " + str(self.cost) + "\n"
+        output = "DEPTH: " + str(self.depth) + " | COST: " + str(self.cost) + "\n"
         for line in self.state:
             output += ' '.join(map(str, line)) + '\n'
         return output
-        
+
     def __eq__(self, other):
         if type(other) != type(self):
             return False
         return self.cost == other.cost
-        
+
     def __ne__(self, other):
         if type(other) != type(self):
             return True
@@ -37,23 +39,24 @@ class Node:
 
     def __lt__(self, other):
         if type(other) != type(self):
-            raise(ValueError)
+            raise (ValueError)
         return self.cost < other.cost
 
     def __gt__(self, other):
         if type(other) != type(self):
-            raise(ValueError)
+            raise (ValueError)
         return self.cost > other.cost
 
     def __le__(self, other):
         if type(other) != type(self):
-            raise(ValueError)
+            raise (ValueError)
         return self.cost <= other.cost
 
     def __ge__(self, other):
         if type(other) != type(self):
-            raise(ValueError)
+            raise (ValueError)
         return self.cost >= other.cost
+
 
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
@@ -62,18 +65,19 @@ class Puzzle(object):
         self.goal_state = self.tuplify(goal_state)
         # self.actions = list()   # List of actions
         self.size = len(init_state)
-        self.visited = set(self.init_state) # Check is the state has appeared or not
-        self.explored, self.result, self.heap= [], [], []
+        self.visited = set(self.init_state)  # Check is the state has appeared or not
+        self.explored, self.result, self.heap = [], [], []
         self.goal_position = {}
         self.rank = {}
         for x, row in enumerate(goal_state):
             for y, ele in enumerate(row):
                 self.goal_position[ele] = (x, y)
-                self.rank[ele] = x*self.size+y
+                self.rank[ele] = x * self.size + y
 
     """
     Find the position of the blank
     """
+
     def locate_tile(self, puzzle, a):
         for x, row in enumerate(puzzle):
             for y, tile in enumerate(row):
@@ -89,7 +93,7 @@ class Puzzle(object):
 
     def tuplify(self, list_2d):
         return tuple(map(tuple, list_2d))
-    
+
     def listify(self, tuple_2d):
         return list(map(list, tuple_2d))
 
@@ -98,21 +102,21 @@ class Puzzle(object):
         line = []
         for row in puzzle:
             line += row
-            
+
         inverse_count = 0
         for i, tile in enumerate(line):
-            for j in range(i+1, len(line)):
-                if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j]!=0:
+            for j in range(i + 1, len(line)):
+                if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j] != 0:
                     inverse_count += 1
-        
+
         print("inverse: ", inverse_count)
         blank_x, _ = self.locate_tile(puzzle, 0)
 
-        return (self.size%2==1 and inverse_count%2==0)\
-                or (self.size%2==0 and blank_x%2==1 and inverse_count%2==0)\
-                or (self.size%2==0 and blank_x%2==0 and inverse_count%2==1) 
+        return (self.size % 2 == 1 and inverse_count % 2 == 0) \
+               or (self.size % 2 == 0 and blank_x % 2 == 1 and inverse_count % 2 == 0) \
+               or (self.size % 2 == 0 and blank_x % 2 == 0 and inverse_count % 2 == 1)
 
-    def solve(self): #Astar
+    def solve(self):  # Astar
         if not self.solvability(self.init_state):
             return ["No Answer"]
 
@@ -132,34 +136,36 @@ class Puzzle(object):
                 return self.result
 
             self.explored.append(current)
-            blank_x, blank_y  = self.locate_tile(current.state, 0)
-            
+            blank_x, blank_y = self.locate_tile(current.state, 0)
+
             for i in range(4):
-                if current.move is not None and i == (3-ACTION.index(current.move)):    #Don't move back
+                if current.move is not None and i == (3 - ACTION.index(current.move)):  # Don't move back
                     continue
 
-                puzzle = self.listify(current.state) 
+                puzzle = self.listify(current.state)
                 dx, dy = MOVE[i]
-                if blank_x + dx < 0\
-                   or blank_x + dx >= self.size\
-                   or blank_y + dy < 0\
-                   or blank_y + dy >= self.size:
+                if blank_x + dx < 0 \
+                        or blank_x + dx >= self.size \
+                        or blank_y + dy < 0 \
+                        or blank_y + dy >= self.size:
                     continue
-                puzzle[blank_x][blank_y] = puzzle[blank_x+dx][blank_y+dy]
-                puzzle[blank_x+dx][blank_y+dy] = 0
+                puzzle[blank_x][blank_y] = puzzle[blank_x + dx][blank_y + dy]
+                puzzle[blank_x + dx][blank_y + dy] = 0
 
                 puzzle = self.tuplify(puzzle)
                 if puzzle in self.visited:
                     continue
                 self.visited.add(puzzle)
-                next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
+                next_node = Node(puzzle, current.depth + 1 + self.heuristic(puzzle), current.depth + 1, current,
+                                 ACTION[i])
                 heapq.heappush(self.heap, (next_node.cost, next_node))
-                
+
         return ["No Answer"]
 
     '''
     check_state is used to check if it's goal
     '''
+
     def check_state(self, puzzle):
         return puzzle == self.goal_state
 
@@ -168,13 +174,15 @@ class Puzzle(object):
     return the estimated steps
     Manhattan
     """
+
     def heuristic(self, puzzle):
         ans = 0
         for x, row in enumerate(puzzle):
             for y, ele in enumerate(row):
-                ans += abs(self.goal_position[ele][0]-x)+abs(self.goal_position[ele][1]-y)
+                ans += abs(self.goal_position[ele][0] - x) + abs(self.goal_position[ele][1] - y)
 
         return ans
+
 
 if __name__ == "__main__":
     # do NOT modify below
@@ -191,7 +199,7 @@ if __name__ == "__main__":
         raise IOError("Input file not found!")
 
     lines = f.readlines()
-    
+
     # n = num rows in input file
     n = len(lines)
     # max_num = n to the power of 2 - 1
@@ -200,15 +208,14 @@ if __name__ == "__main__":
     # Instantiate a 2D list of size n x n
     init_state = [[0 for i in range(n)] for j in range(n)]
     goal_state = [[0 for i in range(n)] for j in range(n)]
-    
 
-    i,j = 0, 0
+    i, j = 0, 0
     for line in lines:
         for number in line.split(" "):
             if number == '':
                 continue
-            value = int(number , base = 10)
-            if  0 <= value <= max_num:
+            value = int(number, base=10)
+            if 0 <= value <= max_num:
                 init_state[i][j] = value
                 j += 1
                 if j == n:
@@ -216,20 +223,20 @@ if __name__ == "__main__":
                     j = 0
 
     for i in range(1, max_num + 1):
-        goal_state[(i-1)//n][(i-1)%n] = i
+        goal_state[(i - 1) // n][(i - 1) % n] = i
     goal_state[n - 1][n - 1] = 0
 
     start = time.time()
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
     end = time.time()
-    print("%.4f"%(end-start))
+    print("%.4f" % (end - start))
 
     print(len(ans))
     print(ans)
     print("# of duplicated state:", len(puzzle.visited))
     print("# of explored nodes:", len(puzzle.explored))
-    print("# of generated nodes:", len(puzzle.explored)+len(puzzle.heap))
+    print("# of generated nodes:", len(puzzle.explored) + len(puzzle.heap))
 
     # print(ans) # Currently I just print the depth of the search
 

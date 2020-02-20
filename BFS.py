@@ -6,6 +6,8 @@ import time
 frontierQueue = []
 directions = ["UP", "DOWN", "LEFT", "RIGHT"]
 visited = set()
+totalNodes = 0
+totalTime = 0
 
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
@@ -22,6 +24,7 @@ class Puzzle(object):
                 self.rank[ele] = x*self.size+y
 
     def solve(self):
+        global totalTime, totalNodes
         visited.clear()
         frontierQueue.clear()
         if (self.solvability(self.init_state) == False):
@@ -56,10 +59,9 @@ class Puzzle(object):
                                     frontierQueue.insert(len(frontierQueue), [newState, newList])
                                     count = count + 1
         end = time.time()
-        print("total nodes: ")
-        print(count)
-        print("time")
-        print(end-start)
+        totalNodes = count
+        totalTime = end - start
+
         return sol
 
     # you may add more functions if you think is useful
@@ -175,11 +177,11 @@ if __name__ == "__main__":
             f.write(answer + '\n')
 
 class MyTester(object):
-    def __init__(self, input, output):
+    def __init__(self, input):
         self.input = input
-        self.output = output
 
     def test(self):
+        global totalNodes, totalTime
         try:
             f = open(self.input, 'r')
         except IOError:
@@ -214,9 +216,6 @@ class MyTester(object):
         goal_state[n - 1][n - 1] = 0
 
         puzzle = Puzzle(init_state, goal_state)
-        ans = puzzle.solve()
+        solution = puzzle.solve()
 
-        with open(self.output, 'w') as f:
-            for answer in ans:
-                f.write(answer + '\n')
-
+        return totalNodes, totalTime, solution

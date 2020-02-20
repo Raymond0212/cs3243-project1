@@ -1,4 +1,5 @@
 import copy
+import json
 import os
 from random import randint
 import subprocess
@@ -58,13 +59,12 @@ def returnState(state):
 def printstate(state):
 
     if state == None:
-        print("Empty")
+        pass
     else:
         for row in range(0, len(state)):
             s = ""
             for col in state[row]:
                 s += str(col) + " "
-            print(s.strip())
 
 def genTestCase(n, id):
     goal_state = [[0 for i in range(n)] for j in range(n)]
@@ -89,8 +89,6 @@ def genTestCase(n, id):
             shuffles = shuffles + 1
             new_state = temp_state
 
-    print(str(shuffles) + "\n")
-    printstate(new_state)
 
     f = open("n_equals_" + str(n) + "/input_" + str(id) + ".txt", "w")
     f.write(returnState(new_state))
@@ -99,16 +97,45 @@ def genTestCase(n, id):
     return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
 
 if __name__ == "__main__":
+    # Empty file first :')
+    n_size = 3
+    with open("summary_BFS.txt", 'w') as f:
+        f.write("{}")
+
     for i in range(4, 11):
         genTestCase(3, i)
 
-    for i in range (0, 11):
-        inputFile = "n_equals_" + str(3) + "/input_" + str(i) + ".txt"
-        outputFile = "n_equals_" + str(3) + "/output_" + str(i) + ".txt"
-        myTester = MyTester(inputFile, outputFile)
-        myTester.test()
 
-        print(testPls(3, inputFile, outputFile))
+    for i in range (1, 11):
+        inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
+        myTester = MyTester(inputFile)
+        #myTester returns a tuple containing totalNodes, totalTime and solution
+        totalNodes_totalTime_solution = myTester.test()
+
+        #testPls is a function that runs the solution found in the outputFile to see if the answer is correct
+        passedTestCase = testPls(n_size, inputFile, totalNodes_totalTime_solution[2])
+        testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
+        data = {}
+        with open("summary.txt", 'r') as f:
+            data = json.loads(f.read())  # data becomes a dictionary
+
+        newTestCase = {
+            "algorithm": "BFS",
+            "totalNodes": totalNodes_totalTime_solution[0],
+            "totalTime": totalNodes_totalTime_solution[1],
+            "solution": totalNodes_totalTime_solution[2],
+            "isSolutionCorrect": passedTestCase
+        }
+
+        newTestCaseJson = json.dumps(newTestCase, indent=4, sort_keys=True)
+        data[testName] = newTestCase
+
+        with open("summary_BFS.txt", 'w') as f:
+            f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+
+
+
+
 
 
 
