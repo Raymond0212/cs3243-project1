@@ -48,7 +48,7 @@ def printstate(state):
                 s += str(col) + " "
             print(s.strip())
 
-def testPls(n, input, output):
+def testPls(n, input, solution):
     try:
         f = open(input, 'r')
     except IOError:
@@ -75,11 +75,9 @@ def testPls(n, input, output):
                     i += 1
                     j = 0
 
-    ##Change this to the moves your algo produces
-    my_moves = open(output,'r').read().split('\n')
-    my_moves.pop()
+    if solution == ["UNSOLVABLE"]:
+        return True
 
-    if my_moves == []
     # Instantiate a 2D list of size n x n
     goal_state = [[0 for i in range(n)] for j in range(n)]
 
@@ -92,8 +90,8 @@ def testPls(n, input, output):
 
     new_state = init_state
     no_of_moves = 0
-    for x in range(0, len(my_moves)):
-        temp_state = move(my_moves[x], new_state)
+    for x in range(0, len(solution)):
+        temp_state = move(solution[x], new_state)
         if temp_state is not None:
             no_of_moves = no_of_moves + 1
             new_state = temp_state
