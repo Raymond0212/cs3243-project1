@@ -58,14 +58,18 @@ class Node:
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
         # you may add more attributes if you think is useful
-        self.init_state = init_state
-        self.goal_state = goal_state
+        self.init_state = self.tuplify(init_state)
+        self.goal_state = self.tuplify(goal_state)
         # self.actions = list()   # List of actions
         self.size = len(init_state)
-        self.visited = {tuple(map(tuple, init_state))} # Check is the state has appeared or not
-        self.explored = []
-        self.result = []
-        self.heap = []
+        self.visited = set(self.init_state) # Check is the state has appeared or not
+        self.explored, self.result, self.heap= [], [], []
+        self.goal_position = {}
+        self.rank = {}
+        for x, row in enumerate(goal_state):
+            for y, ele in enumerate(row):
+                self.goal_position[ele] = (x, y)
+                self.rank[ele] = x*self.size+y
 
     """
     Find the position of the blank
@@ -83,20 +87,47 @@ class Puzzle(object):
             # print(head)
             self.result.append(head.move)
 
+    def tuplify(self, list_2d):
+        return tuple(map(tuple, list_2d))
+    
+    def listify(self, tuple_2d):
+        return list(map(list, tuple_2d))
+
+    def solvability(self, puzzle):
+        puzzle = self.listify(puzzle)
+        line = []
+        for row in puzzle:
+            line += row
+            
+        inverse_count = 0
+        for i, tile in enumerate(line):
+            for j in range(i+1, len(line)):
+                if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j]!=0:
+                    inverse_count += 1
+        
+        print("inverse: ", inverse_count)
+        blank_x, _ = self.locate_tile(puzzle, 0)
+
+        return (self.size%2==1 and inverse_count%2==0)\
+                or (self.size%2==0 and blank_x%2==1 and inverse_count%2==0)\
+                or (self.size%2==0 and blank_x%2==0 and inverse_count%2==1) 
+
     def solve(self): #Astar
-        self.heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
+        if not self.solvability(self.init_state):
+            return ["No Answer"]
+
+        source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
+        self.heap = [(source.cost, source)]
         heapq.heapify(self.heap)
-        # ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
-        # MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        ACTION = [ "UP", "LEFT", "RIGHT", "DOWN"]
+        ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
         MOVE = [(1, 0), (0, 1), (0, -1), (-1, 0)]
 
         """
         This is the core part of A*
         """
         while len(self.heap) != 0:
-            current = heapq.heappop(self.heap)
-            if self.check_solved(current.state) == 0:
+            current = heapq.heappop(self.heap)[1]
+            if self.check_state(current.state):
                 self.show_path(current)
                 return self.result
 
@@ -106,7 +137,8 @@ class Puzzle(object):
             for i in range(4):
                 if current.move is not None and i == (3-ACTION.index(current.move)):    #Don't move back
                     continue
-                puzzle = copy.deepcopy(current.state) 
+
+                puzzle = self.listify(current.state) 
                 dx, dy = MOVE[i]
                 if blank_x + dx < 0\
                    or blank_x + dx >= self.size\
@@ -115,21 +147,21 @@ class Puzzle(object):
                     continue
                 puzzle[blank_x][blank_y] = puzzle[blank_x+dx][blank_y+dy]
                 puzzle[blank_x+dx][blank_y+dy] = 0
-                if tuple(map(tuple, puzzle)) in self.visited:
+
+                puzzle = self.tuplify(puzzle)
+                if puzzle in self.visited:
                     continue
-                self.visited.add(tuple(map(tuple,puzzle)))
+                self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
-                heapq.heappush(self.heap, next_node)
+                heapq.heappush(self.heap, (next_node.cost, next_node))
                 
-        return "No Answer"
+        return ["No Answer"]
 
     '''
-    check_solved is used to check if solved.
-    return 0 while there is no misplaced tiles
-    '0' is also considered as a tile
+    check_state is used to check if it's goal
     '''
-    def check_solved(self, puzzle):
-        return tuple(map(tuple, puzzle)) == tuple(map(tuple, self.goal_state))
+    def check_state(self, puzzle):
+        return puzzle == self.goal_state
 
     """
     implement heuristic functions here
@@ -137,39 +169,36 @@ class Puzzle(object):
     h2: n-Max Swap
     """
     def heuristic(self, state):
-        puzzle = copy.deepcopy(state)
+        puzzle = self.listify(state)
         ans = 0
 
-        goal_blank_x, goal_blank_y = self.locate_tile(self.goal_state, 0)
-        current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+        misplaced_idx_dict = {}
+        for i in range(self.size):
+            for j in range(self.size):
+                curr = puzzle[i][j]
+                if curr != self.goal_state[i][j]:
+                    misplaced_idx_dict[curr] = (i, j)
 
-        def place_zero(current_blank_x, current_blank_y):
-            # 1-step swap: swap with 0 once to the goal state
-            ans = 0
+        while len(misplaced_idx_dict) != 0:
+            if 0 in misplaced_idx_dict:
+                curr_blank_x, curr_blank_y = misplaced_idx_dict[0]
+                goal = self.goal_state[curr_blank_x][curr_blank_y]
 
-            while current_blank_x != goal_blank_x or current_blank_y != goal_blank_y:
-                goal_idx = self.goal_state[current_blank_x][current_blank_y]
-                current_goal_x, current_goal_y = self.locate_tile(puzzle, goal_idx)
-
-                puzzle[current_blank_x][current_blank_y] = goal_idx
-                puzzle[current_goal_x][current_goal_y] = 0
+                # swap 0 and goal, remove goal from misplaced
+                misplaced_idx_dict[0] = misplaced_idx_dict[goal]
+                misplaced_idx_dict[goal] = (curr_blank_x, curr_blank_y)
+                del misplaced_idx_dict[goal]
                 ans += 1
-                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
+                continue
+            else:
+                curr_blank_x, curr_blank_y = self.goal_position[0]
+                goal = misplaced_idx_dict.keys()[0]
 
-            return ans
-
-        place_zero(current_blank_x, current_blank_y)
-
-        for curr_x in range(0, len(puzzle)):
-            for curr_y in range(0, len(puzzle)):
-                if puzzle[curr_x][curr_y] == self.goal_state[curr_x][curr_y]:
-                    continue
-
-                current_blank_x, current_blank_y = self.locate_tile(puzzle, 0)
-                puzzle[current_blank_x][current_blank_y] = puzzle[curr_x][curr_y]
-                puzzle[curr_x][curr_y] = 0
+                # swap 0 and goal, add 0 into misplaced
+                misplaced_idx_dict[0] = misplaced_idx_dict[goal]
+                misplaced_idx_dict[goal] = (curr_blank_x, curr_blank_y)
                 ans += 1
-                ans += place_zero(curr_x, curr_y)
+                continue
 
         return ans
 
