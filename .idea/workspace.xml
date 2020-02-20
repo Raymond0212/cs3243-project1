@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c5aa9190-1705-410b-b7ab-0e4596024edc" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/Runner.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2.out" beforeDir="false" />
@@ -17,6 +18,12 @@
       <change beforePath="$PROJECT_DIR$/n_equals_3/input_1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/n_equals_3/input_1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/n_equals_3/input_2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/n_equals_3/input_2.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/n_equals_3/input_3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/n_equals_3/input_3.txt" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BFS.py" beforeDir="false" afterPath="$PROJECT_DIR$/BFS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestCaseTester.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestCaseTester.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestCasesGeneerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestCasesGeneerator.py" afterDir="false" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,13 +47,19 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Python.CS3243_P1_25_2">
     <configuration name="BFS" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+=======
+  <component name="RunManager" selected="Python.TestCasesGeneerator">
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
       <module name="AStar" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -95,13 +108,18 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\Heidi\AppData\Local\Programs\Python\Python38-32\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+<<<<<<< HEAD
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Runner.py" />
       <option name="PARAMETERS" value="n_equals_4/input_2.txt 2.out" />
+=======
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestCaseTester.py" />
+      <option name="PARAMETERS" value="n_equals_3/input_1.txt n_equals_3/output_1.txt" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -116,13 +134,18 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\Heidi\AppData\Local\Programs\Python\Python38-32\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+<<<<<<< HEAD
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ShengXue_DLS.py" />
       <option name="PARAMETERS" value="n_equals_4/input_2.txt moves.txt" />
+=======
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TestCasesGeneerator.py" />
+      <option name="PARAMETERS" value="n_equals_3/input_9.txt bla.txt" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -160,11 +183,19 @@
     </list>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Python.CS3243_P1_25_2" />
         <item itemvalue="Python.TestCaseTester" />
         <item itemvalue="Python.BFS" />
         <item itemvalue="Python.ShengXue_DLS" />
         <item itemvalue="Python.Runner" />
+=======
+        <item itemvalue="Python.TestCasesGeneerator" />
+        <item itemvalue="Python.TestCaseTester" />
+        <item itemvalue="Python.ShengXue_DLS" />
+        <item itemvalue="Python.Main" />
+        <item itemvalue="Python.test" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
       </list>
     </recent_temporary>
   </component>
@@ -179,17 +210,50 @@
       <option name="presentableId" value="Default" />
       <updated>1581042972850</updated>
     </task>
+    <task id="LOCAL-00001" summary="changed to tuple">
+      <created>1582038249139</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1582038249139</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changed to tuple" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed to tuple" />
+  </component>
   <component name="WindowStateProjectService">
+<<<<<<< HEAD
     <state x="417" y="146" width="838" height="670" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581872203182">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="417" y="146" width="838" height="670" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581872203182" />
+=======
+    <state x="361" y="0" key="#TestCaseTester" timestamp="1582186672816">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="361" y="0" key="#TestCaseTester/0.0.1280.680@0.0.1280.680" timestamp="1582186672816" />
+    <state x="361" y="0" key="#TestCasesGeneerator" timestamp="1582181230296">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="361" y="0" key="#TestCasesGeneerator/0.0.1280.680@0.0.1280.680" timestamp="1582181230296" />
+    <state x="191" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582188334696">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="191" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1582188334696" />
+    <state x="296" y="128" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581577855032" />
+    <state x="297" y="0" key="CommitChangelistDialog2" timestamp="1582200097098">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="297" y="0" key="CommitChangelistDialog2/0.0.1280.680@0.0.1280.680" timestamp="1582200097098" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
     <state x="549" y="168" key="FileChooserDialogImpl" timestamp="1581048832368">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="168" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1581048832368" />
+<<<<<<< HEAD
     <state width="1515" height="220" key="GridCell.Tab.0.bottom" timestamp="1581872519672">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -222,6 +286,44 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1515" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1581863905472" />
+=======
+    <state width="1259" height="152" key="GridCell.Tab.0.bottom" timestamp="1582189091406">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="152" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1582189091406" />
+    <state width="1515" height="207" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581577860580" />
+    <state width="1259" height="152" key="GridCell.Tab.0.center" timestamp="1582189091406">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="152" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1582189091406" />
+    <state width="1515" height="207" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1581577860580" />
+    <state width="1259" height="152" key="GridCell.Tab.0.left" timestamp="1582189091405">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="152" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1582189091405" />
+    <state width="1515" height="207" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1581577860580" />
+    <state width="1259" height="152" key="GridCell.Tab.0.right" timestamp="1582189091406">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="152" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1582189091406" />
+    <state width="1515" height="207" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1581577860580" />
+    <state width="1259" height="204" key="GridCell.Tab.1.bottom" timestamp="1582182179393">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="204" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1582182179393" />
+    <state width="1259" height="204" key="GridCell.Tab.1.center" timestamp="1582182179391">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="204" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1582182179391" />
+    <state width="1259" height="204" key="GridCell.Tab.1.left" timestamp="1582182179391">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="204" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1582182179391" />
+    <state width="1259" height="204" key="GridCell.Tab.1.right" timestamp="1582182179391">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="204" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1582182179391" />
+>>>>>>> e5c77b7b008061b60f16774eb9e7524d49cb495b
     <state x="277" y="56" key="SettingsEditor" timestamp="1581043035809">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

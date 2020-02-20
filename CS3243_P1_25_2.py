@@ -61,11 +61,18 @@ class Node:
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
         # you may add more attributes if you think is useful
-        self.init_state = init_state
-        self.goal_state = goal_state
-        self.actions = list()  # List of actions
+        self.init_state = self.tuplify(init_state)
+        self.goal_state = self.tuplify(goal_state)
+        # self.actions = list()   # List of actions
         self.size = len(init_state)
-        self.visited = {tuple(map(tuple, init_state))}  # Check is the state has appeared or not
+        self.visited = set(self.init_state)  # Check is the state has appeared or not
+        self.explored, self.result, self.heap = [], [], []
+        self.goal_position = {}
+        self.rank = {}
+        for x, row in enumerate(goal_state):
+            for y, ele in enumerate(row):
+                self.goal_position[ele] = (x, y)
+                self.rank[ele] = x * self.size + y
 
     """
     Find the position of the blank
@@ -77,8 +84,6 @@ class Puzzle(object):
                 if tile == a:
                     return (x, y)
 
-    result = []
-
     def show_path(self, head):
         if head.parent is not None:
             self.show_path(head.parent)
@@ -86,28 +91,58 @@ class Puzzle(object):
             # print(head)
             self.result.append(head.move)
 
+    def tuplify(self, list_2d):
+        return tuple(map(tuple, list_2d))
+
+    def listify(self, tuple_2d):
+        return list(map(list, tuple_2d))
+
+    def solvability(self, puzzle):
+        puzzle = self.listify(puzzle)
+        line = []
+        for row in puzzle:
+            line += row
+
+        inverse_count = 0
+        for i, tile in enumerate(line):
+            for j in range(i + 1, len(line)):
+                if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j] != 0:
+                    inverse_count += 1
+
+        print("inverse: ", inverse_count)
+        blank_x, _ = self.locate_tile(puzzle, 0)
+
+        return (self.size % 2 == 1 and inverse_count % 2 == 0) \
+               or (self.size % 2 == 0 and blank_x % 2 == 1 and inverse_count % 2 == 0) \
+               or (self.size % 2 == 0 and blank_x % 2 == 0 and inverse_count % 2 == 1)
+
     def solve(self):  # Astar
-        heap = [Node(self.init_state, self.heuristic(self.init_state), 0, None)]
-        heapq.heapify(heap)
-        explored = []
-        ACTION = ["LEFT", "RIGHT", "UP", "DOWN"]
-        MOVE = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        if not self.solvability(self.init_state):
+            return ["No Answer"]
+
+        source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
+        self.heap = [(source.cost, source)]
+        heapq.heapify(self.heap)
+        ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
+        MOVE = [(1, 0), (0, 1), (0, -1), (-1, 0)]
 
         """
         This is the core part of A*
         """
+        while len(self.heap) != 0:
+            current = heapq.heappop(self.heap)[1]
+            if self.check_state(current.state):
+                self.show_path(current)
+                return self.result
 
-        def inner():
-            current = heapq.heappop(heap)
-            if self.misplace_count(current.state) == 0:
-                return current
-            if current.depth >= 300:
-                return None
-            explored.append(current)
+            self.explored.append(current)
             blank_x, blank_y = self.locate_tile(current.state, 0)
 
             for i in range(4):
-                puzzle = copy.deepcopy(current.state)
+                if current.move is not None and i == (3 - ACTION.index(current.move)):  # Don't move back
+                    continue
+
+                puzzle = self.listify(current.state)
                 dx, dy = MOVE[i]
                 if blank_x + dx < 0 \
                         or blank_x + dx >= self.size \
@@ -116,38 +151,23 @@ class Puzzle(object):
                     continue
                 puzzle[blank_x][blank_y] = puzzle[blank_x + dx][blank_y + dy]
                 puzzle[blank_x + dx][blank_y + dy] = 0
-                if tuple(map(tuple, puzzle)) in self.visited:
+
+                puzzle = self.tuplify(puzzle)
+                if puzzle in self.visited:
                     continue
-                self.visited.add(tuple(map(tuple, puzzle)))
+                self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth + 1 + self.heuristic(puzzle), current.depth + 1, current,
                                  ACTION[i])
-                heapq.heappush(heap, next_node)
+                heapq.heappush(self.heap, (next_node.cost, next_node))
 
-            return None
-
-        while len(heap) != 0:
-            ans = inner()
-            if ans is not None:
-                self.show_path(ans)
-                return self.result
-
-        return "Not Found"
+        return ["No Answer"]
 
     '''
-    misplace_count is used to count all misplaced tiles.
-    return 0 while there is no misplaced tiles
-    '0' is also considered as a tile
+    check_state is used to check if it's goal
     '''
 
-    def misplace_count(self, puzzle):
-        size = len(puzzle)
-        cnt = 0
-        for i in range(size):
-            for j in range(size):
-                if puzzle[i][j] != self.goal_state[i][j]:
-                    cnt += 1
-
-        return cnt
+    def check_state(self, puzzle):
+        return puzzle == self.goal_state
 
     """
     implement heuristic functions here
@@ -156,15 +176,10 @@ class Puzzle(object):
     """
 
     def heuristic(self, puzzle):
-        """
-            sum of Q1!
-        """
-        size = len(puzzle) ** 2
         ans = 0
-        for i in range(size):
-            current_x, current_y = self.locate_tile(puzzle, i)
-            goal_x, goal_y = self.locate_tile(self.goal_state, i)
-            ans += abs(current_x - goal_x) + abs(current_y - goal_y)
+        for x, row in enumerate(puzzle):
+            for y, ele in enumerate(row):
+                ans += abs(self.goal_position[ele][0] - x) + abs(self.goal_position[ele][1] - y)
 
         return ans
 
@@ -215,11 +230,16 @@ if __name__ == "__main__":
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
     end = time.time()
-    print("Total time: " + str(end - start) + " seconds")
-    with open(sys.argv[2], 'w') as f:
-        f.write("Total time: " + str(end - start) + " seconds" + "\n")
+    print("%.4f" % (end - start))
+
+    print(len(ans))
+    print(ans)
+    print("# of duplicated state:", len(puzzle.visited))
+    print("# of explored nodes:", len(puzzle.explored))
+    print("# of generated nodes:", len(puzzle.explored) + len(puzzle.heap))
+
     # print(ans) # Currently I just print the depth of the search
 
-    with open(sys.argv[2], 'a') as f:
-        for answer in ans:
-            f.write(answer + '\n')
+    # with open(sys.argv[2], 'a') as f:
+    #     for answer in ans:
+    #         f.write(answer+'\n')

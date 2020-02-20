@@ -48,22 +48,14 @@ def printstate(state):
                 s += str(col) + " "
             print(s.strip())
 
-if __name__ == "__main__":
-    # argv[0] represents the name of the file that is being executed
-    # argv[1] represents name of input file
-    # argv[2] represents name of destination output file
-    if len(sys.argv) != 3:
-        raise ValueError("Wrong number of arguments!")
-
+def testPls(n, input, output):
     try:
-        f = open(sys.argv[1], 'r')
+        f = open(input, 'r')
     except IOError:
         raise IOError("Input file not found!")
 
     lines = f.readlines()
 
-    # n = num rows in input file
-    n = len(lines)
     # max_num = n to the power of 2 - 1
     max_num = n ** 2 - 1
 
@@ -84,12 +76,10 @@ if __name__ == "__main__":
                     j = 0
 
     ##Change this to the moves your algo produces
-    #my_moves = ['RIGHT', 'DOWN', 'DOWN', 'LEFT', 'UP', 'RIGHT', 'RIGHT', 'DOWN', 'LEFT', 'UP', 'UP', 'LEFT', 'DOWN', 'DOWN', 'RIGHT', 'RIGHT', 'UP', 'LEFT', 'UP', 'LEFT', 'DOWN', 'DOWN']
-    # Using readlines()
-    file = open(sys.argv[2], 'r')
-    my_moves = file.read().splitlines()
+    my_moves = open(output,'r').read().split('\n')
+    my_moves.pop()
 
-    print(my_moves)
+    if my_moves == []
     # Instantiate a 2D list of size n x n
     goal_state = [[0 for i in range(n)] for j in range(n)]
 
@@ -108,12 +98,4 @@ if __name__ == "__main__":
             no_of_moves = no_of_moves + 1
             new_state = temp_state
 
-    print(str(no_of_moves) + "\n")
-    printstate(new_state)
-
-
-
-
-
-
-
+    return (new_state == goal_state)

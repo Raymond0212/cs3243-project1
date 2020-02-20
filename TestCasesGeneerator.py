@@ -1,5 +1,9 @@
 import copy
+import os
 from random import randint
+import subprocess
+from BFS import MyTester
+from TestCaseTester import testPls
 
 def find_zero(state):
     for y in range(0, len(state)):
@@ -37,7 +41,22 @@ def move(direction, state):
         # Illegal move
         return None
 
+
+def returnState(state):
+    output = ""
+    if state == None:
+        return s
+    else:
+        for row in range(0, len(state)):
+            s = ""
+            for col in state[row]:
+                s += str(col) + " "
+            output += (s.strip() + "\n")
+
+        return output.strip()
+
 def printstate(state):
+
     if state == None:
         print("Empty")
     else:
@@ -47,16 +66,13 @@ def printstate(state):
                 s += str(col) + " "
             print(s.strip())
 
-if __name__ == "__main__":
-    # Instantiate a 2D list of size n x n
-    ######CHANGE N TO WHATEVER YOU LIKE
-    n = 3
+def genTestCase(n, id):
     goal_state = [[0 for i in range(n)] for j in range(n)]
 
     # max_num = n to the power of 2 - 1
     max_num = n ** 2 - 1
 
-    #num_of_shuffles = randint(100, 200)
+    # num_of_shuffles = randint(100, 200)
     num_of_shuffles = 1000
     directions = ["RIGHT", "LEFT", "UP", "DOWN"]
 
@@ -75,6 +91,25 @@ if __name__ == "__main__":
 
     print(str(shuffles) + "\n")
     printstate(new_state)
+
+    f = open("n_equals_" + str(n) + "/input_" + str(id) + ".txt", "w")
+    f.write(returnState(new_state))
+    f.close()
+
+    return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
+
+if __name__ == "__main__":
+    for i in range(4, 11):
+        genTestCase(3, i)
+
+    for i in range (0, 11):
+        inputFile = "n_equals_" + str(3) + "/input_" + str(i) + ".txt"
+        outputFile = "n_equals_" + str(3) + "/output_" + str(i) + ".txt"
+        myTester = MyTester(inputFile, outputFile)
+        myTester.test()
+
+        print(testPls(3, inputFile, outputFile))
+
 
 
 
