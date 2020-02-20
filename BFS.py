@@ -34,10 +34,14 @@ class Puzzle(object):
             # TODOdsc
             # implement your search algorithm here
             count = 0
+            numOfDupStates = 0
+            numOfExploredNodes = 0
+            numOfGenNodes = 0
             frontierQueue.insert(len(frontierQueue), [self.init_state, self.actions])
             sol = list()
             while len(frontierQueue) != 0:
                 p = frontierQueue.pop(0)
+                numOfExploredNodes = numOfExploredNodes + 1
                 # visited.add(str(p[0]))
                 visited.add(tuple(map(tuple, p[0])))
                 if p[0] == self.goal_state:
@@ -58,10 +62,16 @@ class Puzzle(object):
                                     newList.append(directions[x])
                                     frontierQueue.insert(len(frontierQueue), [newState, newList])
                                     count = count + 1
+                                    numOfGenNodes = numOfGenNodes + 1
+                            else:
+                                numOfDupStates = numOfDupStates + 1
         end = time.time()
         totalNodes = count
         totalTime = end - start
 
+        print("# of duplicated state:", numOfDupStates)
+        print("# of explored nodes:", numOfExploredNodes)
+        print("# of generated nodes:", numOfGenNodes)
         return sol
 
     # you may add more functions if you think is useful
