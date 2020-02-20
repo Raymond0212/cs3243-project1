@@ -3,6 +3,7 @@ import os
 import sys
 import time
 
+visited = set()
 
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
@@ -10,26 +11,27 @@ class Puzzle(object):
         self.init_state = init_state
         self.goal_state = goal_state
         self.actions = list()
-        self.visited = set()
         self.p = {}
         self.foundSolution = False
         self.totalNodes = 0
 
+        self.max_depth_achieved = 0
+
     def solve(self):
         # TODO
         # implement your search algorithm here
-        max_recursion_depth = 10
+        start = time.time()
         lower_bound = 0
         upper_bound = 10000
         for max_recursion_depth in range(lower_bound, upper_bound):
             print("Attempting depth: " + str(max_recursion_depth))
+            self.max_depth_achieved = max_recursion_depth
             self.dfs(self.init_state, 0, max_recursion_depth)
-            print("Total nodes so far: " + str(self.totalNodes))
             if not self.foundSolution:
                 print("Depth " + str(max_recursion_depth) + " failed")
-                self.actions.clear()
-                self.visited.clear()
-                self.p.clear()
+                self.actions = []
+                visited.clear()
+                self.p = {}
                 continue
             else:
                 break
@@ -42,7 +44,18 @@ class Puzzle(object):
             current_state_str = self.p[current_state_str][0]
 
         actions_reversed.reverse()
+        with open(sys.argv[2], 'w') as f:
+            f.write("Max recursion depth: " + str(self.max_depth_achieved) +"\n")
+            f.write("Total nodes: " + str(self.totalNodes) + "\n")
+            end = time.time()
+            f.write("Total time: " + str(end - start) + " seconds" + "\n")
+
+        print("Max recursion depth: " + str(self.max_depth_achieved))
+        print("Total nodes: " + str(self.totalNodes))
+        end = time.time()
+        print("Total time: " + str(end - start) + " seconds")
         print(actions_reversed)
+
         return actions_reversed  # sample output
 
 
@@ -56,12 +69,12 @@ class Puzzle(object):
         else:
             self.totalNodes = self.totalNodes + 1
             state_str = str(state)
-            self.visited.add(state_str)
+            visited.add(state_str)
             for direction in ["RIGHT", "LEFT", "UP", "DOWN"]:
                 neighbour_state = self.move(direction, state)
                 if neighbour_state is not None:
                     neighbour_state_str = str(neighbour_state)
-                    if neighbour_state_str not in self.visited:
+                    if neighbour_state_str not in visited:
                         self.p[neighbour_state_str] = (state_str, direction)
                         self.dfs(neighbour_state, current_recursion_depth + 1, max_recursion_depth)
 
@@ -116,7 +129,6 @@ class Puzzle(object):
 
 
 if __name__ == "__main__":
-    start = time.process_time()
 
     # do NOT modify below
 
@@ -162,9 +174,7 @@ if __name__ == "__main__":
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
 
-    print(time.process_time() - start)
-
-    with open(sys.argv[2], 'w') as f:
+    with open(sys.argv[2], 'a') as f:
         for answer in ans:
             f.write(answer + '\n')
 

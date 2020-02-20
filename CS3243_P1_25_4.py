@@ -192,12 +192,11 @@ if __name__ == "__main__":
         goal_state[(i-1)//n][(i-1)%n] = i
     goal_state[n - 1][n - 1] = 0
 
+    start = time.time()
     puzzle = Puzzle(init_state, goal_state)
     ans = puzzle.solve()
-
-
-    print(ans) # Currently I just print the depth of the search
-
-    # with open(sys.argv[2], 'a') as f:
-    #     for answer in ans:
-    #         f.write(answer+'\n')
+    end = time.time()
+    print("Total time: " + str(end - start) + " seconds")
+    with open(sys.argv[2], 'w') as f:
+        f.write("Total time: " + str(end - start) + " seconds" + "\n")
+    # print(ans) # Currently I just print the depth of the search

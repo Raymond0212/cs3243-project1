@@ -1,6 +1,7 @@
 import copy
 import os
 import sys
+import time
 
 frontierQueue = []
 directions = ["UP", "DOWN", "LEFT", "RIGHT"]
@@ -16,6 +17,8 @@ class Puzzle(object):
     def solve(self):
         # TODO
         # implement your search algorithm here
+        start = time.time()
+        print("Solving...")
         frontierQueue.insert(len(frontierQueue), [self.init_state, self.actions])
         sol = list()
         while len(frontierQueue) != 0:
@@ -38,6 +41,11 @@ class Puzzle(object):
                                 newList = copy.deepcopy(p[1])
                                 newList.append(directions[x])
                                 frontierQueue.insert(len(frontierQueue), [newState, newList])
+
+        with open(sys.argv[2], 'w') as f:
+            end = time.time()
+            f.write("Total time: " + str(end - start) + " seconds" + "\n")
+
         return sol
 
     # you may add more functions if you think is useful

@@ -84,9 +84,12 @@ if __name__ == "__main__":
                     j = 0
 
     ##Change this to the moves your algo produces
-    my_moves = ['LEFT', 'DOWN', 'RIGHT', 'UP', 'UP', 'LEFT', 'LEFT', 'DOWN', 'RIGHT', 'DOWN', 'RIGHT', 'UP', 'UP', 'LEFT', 'LEFT',
-     'DOWN', 'RIGHT', 'UP', 'LEFT', 'DOWN', 'DOWN', 'RIGHT', 'RIGHT']
+    #my_moves = ['RIGHT', 'DOWN', 'DOWN', 'LEFT', 'UP', 'RIGHT', 'RIGHT', 'DOWN', 'LEFT', 'UP', 'UP', 'LEFT', 'DOWN', 'DOWN', 'RIGHT', 'RIGHT', 'UP', 'LEFT', 'UP', 'LEFT', 'DOWN', 'DOWN']
+    # Using readlines()
+    file = open(sys.argv[2], 'r')
+    my_moves = file.read().splitlines()
 
+    print(my_moves)
     # Instantiate a 2D list of size n x n
     goal_state = [[0 for i in range(n)] for j in range(n)]
 
