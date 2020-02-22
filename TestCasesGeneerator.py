@@ -137,7 +137,7 @@ def engine(n_size, num_of_cases, algo_name):
 if __name__ == "__main__":
     # Empty file first :')
     n_size = 3
-    num_of_cases = 10
+    num_of_cases = 100
     algo_name = "BFS"
     engine(n_size, num_of_cases, algo_name)
 

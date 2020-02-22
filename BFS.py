@@ -28,8 +28,14 @@ class Puzzle(object):
 
     def solve(self):
         global totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
-        visited.clear()
-        frontierQueue.clear()
+        totalNodes = 0
+        totalTime = 0
+        numOfDupStates = 0
+        numOfExploredNodes = 0
+        numOfGenNodes = 0
+
+        visited = set()
+        frontierQueue = []
         if (self.solvability(self.init_state) == False):
             return ["UNSOLVABLE"]
         else:
