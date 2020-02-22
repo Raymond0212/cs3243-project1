@@ -66,6 +66,7 @@ class Puzzle(object):
         self.explored, self.result, self.heap= [], [], []
         self.goal_position = {}
         self.rank = {}
+        self.state_duplicated = 0
         for x, row in enumerate(goal_state):
             for y, ele in enumerate(row):
                 self.goal_position[ele] = (x, y)
@@ -129,6 +130,8 @@ class Puzzle(object):
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
                 self.show_path(current)
+                self.node_generated = len(self.heap) + len(self.explored)
+                self.node_visited = len(self.explored)
                 return self.result
 
             self.explored.append(current)
@@ -150,6 +153,7 @@ class Puzzle(object):
 
                 puzzle = self.tuplify(puzzle)
                 if puzzle in self.visited:
+                    self.state_duplicated += 1
                     continue
                 self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth+1+self.heuristic(puzzle), current.depth+1, current, ACTION[i])
@@ -227,9 +231,9 @@ if __name__ == "__main__":
 
     print(len(ans))
     print(ans)
-    print("# of duplicated state:", len(puzzle.visited))
-    print("# of explored nodes:", len(puzzle.explored))
-    print("# of generated nodes:", len(puzzle.explored)+len(puzzle.heap))
+    print("# of duplicated state:", puzzle.state_duplicated)
+    print("# of explored nodes:", puzzle.node_visited)
+    print("# of generated nodes:", puzzle.node_generated)
 
     # print(ans) # Currently I just print the depth of the search
 
