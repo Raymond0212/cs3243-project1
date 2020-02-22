@@ -172,6 +172,8 @@ class Puzzle(object):
         ans = 0
         for x, row in enumerate(state):
             for y, ele in enumerate(row):
+                if ele == 0:
+                    continue
                 ans += 1 if x!=self.goal_position[ele][0] else 0
                 ans += 1 if y!=self.goal_position[ele][1] else 0
                         

@@ -66,7 +66,7 @@ class Puzzle(object):
         self.explored, self.result, self.heap= [], [], []
         self.goal_position = {}
         self.rank = {}
-        self.state_duplicated = 0
+        self.state_duplicated, self.node_visited, self.node_generated = 0, 0, 0
         for x, row in enumerate(goal_state):
             for y, ele in enumerate(row):
                 self.goal_position[ele] = (x, y)
@@ -176,6 +176,8 @@ class Puzzle(object):
         ans = 0
         for x, row in enumerate(puzzle):
             for y, ele in enumerate(row):
+                if ele == 0:
+                    continue
                 ans += abs(self.goal_position[ele][0]-x)+abs(self.goal_position[ele][1]-y)
 
         return ans
