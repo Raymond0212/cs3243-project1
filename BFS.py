@@ -11,6 +11,7 @@ totalTime = 0
 numOfDupStates = 0
 numOfExploredNodes = 0
 numOfGenNodes = 0
+maxSizeOfFrontier = 0
 
 class Puzzle(object):
     def __init__(self, init_state, goal_state):
@@ -27,12 +28,13 @@ class Puzzle(object):
                 self.rank[ele] = x*self.size+y
 
     def solve(self):
-        global totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        global totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
         totalNodes = 0
         totalTime = 0
         numOfDupStates = 0
         numOfExploredNodes = 0
         numOfGenNodes = 0
+        maxSizeOfFrontier = 0
 
         visited = set()
         frontierQueue = []
@@ -46,6 +48,11 @@ class Puzzle(object):
             frontierQueue.insert(len(frontierQueue), [self.init_state, self.actions])
             sol = list()
             while len(frontierQueue) != 0:
+                # max size of frontier
+                if maxSizeOfFrontier < len(frontierQueue):
+                    maxSizeOfFrontier = len(frontierQueue)
+
+
                 p = frontierQueue.pop(0)
                 numOfExploredNodes = numOfExploredNodes + 1
                 # visited.add(str(p[0]))
@@ -68,7 +75,7 @@ class Puzzle(object):
                                     newList.append(directions[x])
                                     frontierQueue.insert(len(frontierQueue), [newState, newList])
                                     count = count + 1
-                                    numOfGenNodes = numOfGenNodes + 1
+                                numOfGenNodes = numOfGenNodes + 1
                             else:
                                 numOfDupStates = numOfDupStates + 1
         end = time.time()
