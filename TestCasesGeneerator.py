@@ -96,15 +96,19 @@ def genTestCase(n, id):
 
     return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
 
+def genNTestCase(n_size, numOfCases):
+    for i in range(1, num_of_cases + 1):
+        genTestCase(n_size, i)
+
 def engine(n_size, num_of_cases, algo_name):
     with open("summary_" + algo_name + ".txt", 'w') as f:
         f.write("{}")
 
-    for i in range(1, num_of_cases):
-        genTestCase(n_size, i)
+    # for i in range(1, num_of_cases):
+    #     genTestCase(n_size, i)
 
 
-    for i in range (1, num_of_cases):
+    for i in range (1, num_of_cases + 1):
         inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         myTester = MyTester(inputFile)
         #myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
@@ -135,12 +139,22 @@ def engine(n_size, num_of_cases, algo_name):
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
 
 if __name__ == "__main__":
+    num_of_cases = 3
+
+    # prep
+    genNTestCase(3, num_of_cases)
+    genNTestCase(4, num_of_cases)
+    genNTestCase(5, num_of_cases)
+
     # Empty file first :')
     n_size = 3
-    num_of_cases = 100
     algo_name = "BFS"
     engine(n_size, num_of_cases, algo_name)
 
+    for x in range(3, 6):
+        engine(x, num_of_cases, "CS3243_P1_25_2")
+        engine(x, num_of_cases, "CS3243_P1_25_3")
+        engine(x, num_of_cases, "CS3243_P1_25_4")
 
 
 
