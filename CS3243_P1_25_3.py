@@ -110,7 +110,7 @@ class Puzzle(object):
                 if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j] != 0:
                     inverse_count += 1
 
-        # print("inverse: ", inverse_count)
+        print("inverse: ", inverse_count)
         blank_x, _ = self.locate_tile(puzzle, 0)
 
         return (self.size % 2 == 1 and inverse_count % 2 == 0) \

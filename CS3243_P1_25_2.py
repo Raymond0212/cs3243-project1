@@ -111,7 +111,7 @@ class Puzzle(object):
                 if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j] != 0:
                     inverse_count += 1
 
-        # print("inverse: ", inverse_count)
+        print("inverse: ", inverse_count)
         blank_x, _ = self.locate_tile(puzzle, 0)
 
         return (self.size % 2 == 1 and inverse_count % 2 == 0) \
@@ -197,6 +197,67 @@ class Puzzle(object):
                 ans += abs(self.goal_position[ele][0] - x) + abs(self.goal_position[ele][1] - y)
 
         return ans
+
+
+if __name__ == "__main__":
+    # do NOT modify below
+
+    # argv[0] represents the name of the file that is being executed
+    # argv[1] represents name of input file
+    # argv[2] represents name of destination output file
+    if len(sys.argv) != 3:
+        raise ValueError("Wrong number of arguments!")
+
+    try:
+        f = open(sys.argv[1], 'r')
+    except IOError:
+        raise IOError("Input file not found!")
+
+    lines = f.readlines()
+
+    # n = num rows in input file
+    n = len(lines)
+    # max_num = n to the power of 2 - 1
+    max_num = n ** 2 - 1
+
+    # Instantiate a 2D list of size n x n
+    init_state = [[0 for i in range(n)] for j in range(n)]
+    goal_state = [[0 for i in range(n)] for j in range(n)]
+
+    i, j = 0, 0
+    for line in lines:
+        for number in line.split(" "):
+            if number == '':
+                continue
+            value = int(number, base=10)
+            if 0 <= value <= max_num:
+                init_state[i][j] = value
+                j += 1
+                if j == n:
+                    i += 1
+                    j = 0
+
+    for i in range(1, max_num + 1):
+        goal_state[(i - 1) // n][(i - 1) % n] = i
+    goal_state[n - 1][n - 1] = 0
+
+    start = time.time()
+    puzzle = Puzzle(init_state, goal_state)
+    ans = puzzle.solve()
+    end = time.time()
+    print("%.4f" % (end - start))
+
+    print(len(ans))
+    print(ans)
+    print("# of duplicated state:", puzzle.state_duplicated)
+    print("# of explored nodes:", puzzle.node_visited)
+    print("# of generated nodes:", puzzle.node_generated)
+
+    # print(ans) # Currently I just print the depth of the search
+
+    # with open(sys.argv[2], 'a') as f:
+    #     for answer in ans:
+    #         f.write(answer+'\n')
 
 
 if __name__ == "__main__":
