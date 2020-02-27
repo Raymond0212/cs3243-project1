@@ -6,6 +6,7 @@ import heapq
 import time
 import copy
 
+maxSizeOfFrontier = 0
 """
 Node is a class which is used to store each node
 It contains the state, estimated cost, search depth, parent, move of current node.
@@ -113,6 +114,8 @@ class Puzzle(object):
                 or (self.size%2==0 and blank_x%2==0 and inverse_count%2==1) 
 
     def solve(self): #Astar
+        global maxSizeOfFrontier
+
         if not self.solvability(self.init_state):
             return ["No Answer"]
 
@@ -121,11 +124,17 @@ class Puzzle(object):
         heapq.heapify(self.heap)
         ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
         MOVE = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        maxSizeOfFrontier = 0
 
         """
         This is the core part of A*
         """
         while len(self.heap) != 0:
+
+            # max size of frontier
+            if len(self.heap) > maxSizeOfFrontier:
+                maxSizeOfFrontier = self.heap
+
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
                 self.show_path(current)
