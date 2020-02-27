@@ -208,7 +208,7 @@ class Puzzle(object):
                 continue
             else:
                 curr_blank_x, curr_blank_y = self.goal_position[0]
-                goal = misplaced_idx_dict.keys()[0]
+                goal = list(misplaced_idx_dict.keys())[0]
 
                 # swap 0 and goal, add 0 into misplaced
                 misplaced_idx_dict[0] = misplaced_idx_dict[goal]
