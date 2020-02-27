@@ -328,4 +328,4 @@ class MyTester_AStar3(object):
         numOfGenNodes =  len(puzzle.explored) + len(puzzle.heap)
 
 
-        return totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier

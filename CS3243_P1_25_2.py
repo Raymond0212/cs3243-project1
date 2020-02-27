@@ -370,4 +370,4 @@ class MyTester_AStar2(object):
         numOfGenNodes = puzzle.node_generated
 
 
-        return totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier

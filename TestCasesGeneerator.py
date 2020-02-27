@@ -138,7 +138,7 @@ def engine(n_size, num_of_cases, algo_name):
         resultsTuple = myTester.test()
 
         # testPls is a function that runs the solution found in the outputFile to see if the answer is correct
-        passedTestCase = testPls(n_size, inputFile, resultsTuple[2])
+        passedTestCase = testPls(n_size, inputFile, resultsTuple[1])
         testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         data = {}
         with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'r') as f:
@@ -146,16 +146,18 @@ def engine(n_size, num_of_cases, algo_name):
 
         newTestCase = {
             "algorithm": algo_name,
-            "self.node_generated": resultsTuple[3],
-            "self.node_visited": resultsTuple[4],
-            "self.state_duplicated": resultsTuple[5],
-            "self.total_nodes": resultsTuple[0],
-            "self.total_time": resultsTuple[1],
-            "solution": resultsTuple[2],
+            "self.node_generated": resultsTuple[2],
+            "self.node_visited": resultsTuple[3],
+            "self.state_duplicated": resultsTuple[4],
+            # "self.total_nodes": resultsTuple[0],
+            "self.total_time": resultsTuple[0],
+            # "solution": resultsTuple[1],
+            "max size of frontier": resultsTuple[5],
             "isSolutionCorrect": passedTestCase
         }
 
         data[testName] = newTestCase
+        print(data[testName])
 
         with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
@@ -172,9 +174,13 @@ if __name__ == "__main__":
     genNTestCase(5, num_of_cases)
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
+
+    # BFS runs n = 3 only
+    engine(3, num_of_cases, algo_names[0])
+
     for n_size in range(3, 6):
-        # BFS
-        engine(n_size, num_of_cases, algo_names[0])
+        # # BFS
+        # engine(n_size, num_of_cases, algo_names[0])
 
         # Manhattan
         engine(n_size, num_of_cases, algo_names[1])

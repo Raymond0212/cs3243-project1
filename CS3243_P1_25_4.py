@@ -137,7 +137,7 @@ class Puzzle(object):
 
             # max size of frontier
             if len(self.heap) > maxSizeOfFrontier:
-                maxSizeOfFrontier = self.heap
+                maxSizeOfFrontier = len(self.heap)
 
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
@@ -305,4 +305,4 @@ class MyTester_AStar4(object):
         numOfGenNodes =  len(puzzle.explored) + len(puzzle.heap)
 
 
-        return totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
