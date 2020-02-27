@@ -6,6 +6,7 @@ import heapq
 import time
 import copy
 
+maxSizeOfFrontier = 0
 """
 Node is a class which is used to store each node
 It contains the state, estimated cost, search depth, parent, move of current node.
@@ -109,7 +110,7 @@ class Puzzle(object):
                 if self.rank[line[j]] <= self.rank[tile] and tile != 0 and line[j] != 0:
                     inverse_count += 1
 
-        print("inverse: ", inverse_count)
+        # print("inverse: ", inverse_count)
         blank_x, _ = self.locate_tile(puzzle, 0)
 
         return (self.size % 2 == 1 and inverse_count % 2 == 0) \
@@ -117,6 +118,8 @@ class Puzzle(object):
                or (self.size % 2 == 0 and blank_x % 2 == 0 and inverse_count % 2 == 1)
 
     def solve(self):  # Astar
+        global maxSizeOfFrontier
+
         if not self.solvability(self.init_state):
             return ["No Answer"]
 
@@ -125,11 +128,17 @@ class Puzzle(object):
         heapq.heapify(self.heap)
         ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
         MOVE = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        maxSizeOfFrontier = 0
 
         """
         This is the core part of A*
         """
         while len(self.heap) != 0:
+
+            # max size of frontier
+            if len(self.heap) > maxSizeOfFrontier:
+                maxSizeOfFrontier = len(self.heap)
+
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
                 self.show_path(current)
@@ -268,3 +277,55 @@ if __name__ == "__main__":
     # with open(sys.argv[2], 'a') as f:
     #     for answer in ans:
     #         f.write(answer+'\n')
+
+class MyTester_AStar3(object):
+    def __init__(self, input):
+        self.input = input
+
+    def test(self):
+        try:
+            f = open(self.input, 'r')
+        except IOError:
+            raise IOError("Input file not found!")
+
+        lines = f.readlines()
+
+        # n = num rows in input file
+        n = len(lines)
+        # max_num = n to the power of 2 - 1
+        max_num = n ** 2 - 1
+
+        # Instantiate a 2D list of size n x n
+        init_state = [[0 for i in range(n)] for j in range(n)]
+        goal_state = [[0 for i in range(n)] for j in range(n)]
+
+        i, j = 0, 0
+        for line in lines:
+            for number in line.split(" "):
+                if number == '':
+                    continue
+                value = int(number, base=10)
+                if 0 <= value <= max_num:
+                    init_state[i][j] = value
+                    j += 1
+                    if j == n:
+                        i += 1
+                        j = 0
+
+        for i in range(1, max_num + 1):
+            goal_state[(i - 1) // n][(i - 1) % n] = i
+        goal_state[n - 1][n - 1] = 0
+
+        puzzle = Puzzle(init_state, goal_state)
+        start = time.time()
+        solution = puzzle.solve()
+        end = time.time()
+
+        totalNodes = maxSizeOfFrontier
+        totalTime = end-start
+        numOfDupStates = len(puzzle.visited)
+        numOfExploredNodes = len(puzzle.explored)
+        numOfGenNodes =  len(puzzle.explored) + len(puzzle.heap)
+
+
+        return totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes

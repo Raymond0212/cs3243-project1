@@ -3,8 +3,12 @@ import json
 import os
 from random import randint
 import subprocess
-from BFS import MyTester
+from BFS import MyTester_BFS
+from CS3243_P1_25_2 import MyTester_AStar2
+from CS3243_P1_25_3 import MyTester_AStar3
+from CS3243_P1_25_4 import MyTester_AStar4
 from TestCaseTester import testPls
+
 
 def find_zero(state):
     for y in range(0, len(state)):
@@ -12,6 +16,7 @@ def find_zero(state):
             if state[y][x] == 0:
                 return x, y
     return None
+
 
 def move(direction, state):
     newstate = copy.deepcopy(state)
@@ -56,8 +61,8 @@ def returnState(state):
 
         return output.strip()
 
-def printstate(state):
 
+def printstate(state):
     if state == None:
         pass
     else:
@@ -66,14 +71,15 @@ def printstate(state):
             for col in state[row]:
                 s += str(col) + " "
 
+
 def genTestCase(n, id):
     goal_state = [[0 for i in range(n)] for j in range(n)]
 
     # max_num = n to the power of 2 - 1
     max_num = n ** 2 - 1
 
-    # num_of_shuffles = randint(100, 200)
-    num_of_shuffles = 1000
+    num_of_shuffles = randint(100, 2000)
+    # num_of_shuffles = 1000
     directions = ["RIGHT", "LEFT", "UP", "DOWN"]
 
     for i in range(1, max_num + 1):
@@ -95,11 +101,13 @@ def genTestCase(n, id):
 
     return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
 
+
 def genNTestCase(n_size, num_of_cases):
     for i in range(n_size + 1, num_of_cases + n_size + 1):
         # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
         # Don't overwrite the given sample test cases
         genTestCase(n_size, i)
+
 
 def engine(n_size, num_of_cases, algo_name):
     with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
@@ -108,16 +116,28 @@ def engine(n_size, num_of_cases, algo_name):
     # for i in range(1, num_of_cases):
     #     genTestCase(n_size, i)
 
-
-    for i in range (1, num_of_cases + n_size + 1):
+    for i in range(1, num_of_cases + n_size + 1):
         print(str(n_size) + ";" + str(i))
         # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
         inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
-        myTester = MyTester(inputFile)
-        #myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        myTester = None
+        algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
+
+        if algo_name == algo_names[0]:
+            myTester = MyTester_BFS(inputFile)
+        elif algo_name == algo_names[1]:
+            myTester = MyTester_AStar2(inputFile)
+        elif algo_name == algo_names[2]:
+            myTester = MyTester_AStar3(inputFile)
+        elif algo_name == algo_names[3]:
+            myTester = MyTester_AStar4(inputFile)
+        else:
+            print("Error, algo not found")
+
+        # myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
         resultsTuple = myTester.test()
 
-        #testPls is a function that runs the solution found in the outputFile to see if the answer is correct
+        # testPls is a function that runs the solution found in the outputFile to see if the answer is correct
         passedTestCase = testPls(n_size, inputFile, resultsTuple[2])
         testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         data = {}
@@ -140,30 +160,27 @@ def engine(n_size, num_of_cases, algo_name):
         with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
 
+
 if __name__ == "__main__":
     # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
     # given for each n size
     num_of_cases = 3
 
-    # prep
+    # prep, generates the input files for n=3, 4, 5
     genNTestCase(3, num_of_cases)
     genNTestCase(4, num_of_cases)
     genNTestCase(5, num_of_cases)
 
+    algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
+    for n_size in range(3, 6):
+        # BFS
+        engine(n_size, num_of_cases, algo_names[0])
 
-    for x in range(3, 6):
-        engine(x, num_of_cases, "BFS")
-        # engine(x, num_of_cases, "CS3243_P1_25_2")
-        # engine(x, num_of_cases, "CS3243_P1_25_3")
-        # engine(x, num_of_cases, "CS3243_P1_25_4")
+        # Manhattan
+        engine(n_size, num_of_cases, algo_names[1])
 
+        # h2: n-Max Swap
+        engine(n_size, num_of_cases, algo_names[2])
 
-
-
-
-
-
-
-
-
-
+        # h3: Number of tiles out of row + Number of tiles out of column
+        engine(n_size, num_of_cases, algo_names[3])

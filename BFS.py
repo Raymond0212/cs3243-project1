@@ -195,7 +195,7 @@ if __name__ == "__main__":
         for answer in ans:
             f.write(answer + '\n')
 
-class MyTester(object):
+class MyTester_BFS(object):
     def __init__(self, input):
         self.input = input
 
