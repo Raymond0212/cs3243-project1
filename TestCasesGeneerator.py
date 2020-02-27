@@ -46,7 +46,7 @@ def move(direction, state):
 def returnState(state):
     output = ""
     if state == None:
-        return s
+        return state
     else:
         for row in range(0, len(state)):
             s = ""
@@ -89,26 +89,29 @@ def genTestCase(n, id):
             shuffles = shuffles + 1
             new_state = temp_state
 
-
     f = open("n_equals_" + str(n) + "/input_" + str(id) + ".txt", "w")
     f.write(returnState(new_state))
     f.close()
 
     return "n_equals_" + str(n) + "/input_" + str(id) + ".txt"
 
-def genNTestCase(n_size, numOfCases):
-    for i in range(1, num_of_cases + 1):
+def genNTestCase(n_size, num_of_cases):
+    for i in range(n_size + 1, num_of_cases + n_size + 1):
+        # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
+        # Don't overwrite the given sample test cases
         genTestCase(n_size, i)
 
 def engine(n_size, num_of_cases, algo_name):
-    with open("summary_" + algo_name + ".txt", 'w') as f:
+    with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
         f.write("{}")
 
     # for i in range(1, num_of_cases):
     #     genTestCase(n_size, i)
 
 
-    for i in range (1, num_of_cases + 1):
+    for i in range (1, num_of_cases + n_size + 1):
+        print(str(n_size) + ";" + str(i))
+        # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
         inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         myTester = MyTester(inputFile)
         #myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
@@ -118,7 +121,7 @@ def engine(n_size, num_of_cases, algo_name):
         passedTestCase = testPls(n_size, inputFile, resultsTuple[2])
         testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         data = {}
-        with open("summary_" + algo_name + ".txt", 'r') as f:
+        with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'r') as f:
             data = json.loads(f.read())  # data becomes a dictionary
 
         newTestCase = {
@@ -132,13 +135,14 @@ def engine(n_size, num_of_cases, algo_name):
             "isSolutionCorrect": passedTestCase
         }
 
-        newTestCaseJson = json.dumps(newTestCase, indent=4, sort_keys=True)
         data[testName] = newTestCase
 
-        with open("summary_" + algo_name + ".txt", 'w') as f:
+        with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
 
 if __name__ == "__main__":
+    # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
+    # given for each n size
     num_of_cases = 3
 
     # prep
@@ -146,15 +150,12 @@ if __name__ == "__main__":
     genNTestCase(4, num_of_cases)
     genNTestCase(5, num_of_cases)
 
-    # Empty file first :')
-    n_size = 3
-    algo_name = "BFS"
-    engine(n_size, num_of_cases, algo_name)
 
     for x in range(3, 6):
-        engine(x, num_of_cases, "CS3243_P1_25_2")
-        engine(x, num_of_cases, "CS3243_P1_25_3")
-        engine(x, num_of_cases, "CS3243_P1_25_4")
+        engine(x, num_of_cases, "BFS")
+        # engine(x, num_of_cases, "CS3243_P1_25_2")
+        # engine(x, num_of_cases, "CS3243_P1_25_3")
+        # engine(x, num_of_cases, "CS3243_P1_25_4")
 
 
 

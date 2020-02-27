@@ -1,0 +1,14 @@
+{
+    "n_equals_4/input_1.txt": {
+        "algorithm": "BFS",
+        "isSolutionCorrect": true,
+        "self.node_generated": 0,
+        "self.node_visited": 0,
+        "self.state_duplicated": 0,
+        "self.total_nodes": 0,
+        "self.total_time": 0,
+        "solution": [
+            "UNSOLVABLE"
+        ]
+    }
+}
