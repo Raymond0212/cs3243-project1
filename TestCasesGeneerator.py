@@ -166,18 +166,18 @@ def engine(n_size, num_of_cases, algo_name):
 if __name__ == "__main__":
     # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
     # given for each n size
-    num_of_cases = 50
+    num_of_cases = 100
 
     # prep, generates the input files for n=3, 4, 5
-    genNTestCase(3, num_of_cases)
-    genNTestCase(4, num_of_cases)
-    genNTestCase(5, num_of_cases)
+    # genNTestCase(3, num_of_cases)
+    # genNTestCase(4, num_of_cases)
+    # genNTestCase(5, num_of_cases)
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
 
     # BFS runs n = 3 only
-    engine(3, num_of_cases, algo_names[0])
-    #
+    # engine(3, num_of_cases, algo_names[0])
+
     # for n_size in range(3, 6):
     #     # # BFS
     #     # engine(n_size, num_of_cases, algo_names[0])
