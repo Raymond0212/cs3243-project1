@@ -67,7 +67,7 @@ class Puzzle(object):
         # self.actions = list()   # List of actions
         self.size = len(init_state)
         self.visited = set(self.init_state)  # Check is the state has appeared or not
-        self.explored, self.result, self.heap = [], [], []
+        self.result, self.heap = [], []
         self.goal_position = {}
         self.rank = {}
         self.state_duplicated, self.node_visited, self.node_generated = 0, 0, 0
@@ -122,7 +122,7 @@ class Puzzle(object):
         global maxSizeOfFrontier
 
         if not self.solvability(self.init_state):
-            return ["No Answer"]
+            return ["UNSOLVABLE"]
 
         source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
         self.heap = [(source.cost, source)]
@@ -143,11 +143,10 @@ class Puzzle(object):
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
                 self.show_path(current)
-                self.node_generated = len(self.heap) + len(self.explored)
-                self.node_visited = len(self.explored)
+                self.node_generated = len(self.heap) + self.visited
                 return self.result
 
-            self.explored.append(current)
+            self.node_visited += 1
             blank_x, blank_y = self.locate_tile(current.state, 0)
 
             for i in range(4):

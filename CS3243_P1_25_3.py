@@ -67,9 +67,10 @@ class Puzzle(object):
         # self.actions = list()   # List of actions
         self.size = len(init_state)
         self.visited = set(self.init_state)  # Check is the state has appeared or not
-        self.explored, self.result, self.heap = [], [], []
+        self.result, self.heap = [], []
         self.goal_position = {}
         self.rank = {}
+        self.state_duplicated, self.node_visited, self.node_generated = 0, 0, 0
         for x, row in enumerate(goal_state):
             for y, ele in enumerate(row):
                 self.goal_position[ele] = (x, y)
@@ -121,7 +122,7 @@ class Puzzle(object):
         global maxSizeOfFrontier
 
         if not self.solvability(self.init_state):
-            return ["No Answer"]
+            return ["UNSOLVABLE"]
 
         source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
         self.heap = [(source.cost, source)]
@@ -142,9 +143,10 @@ class Puzzle(object):
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
                 self.show_path(current)
+                self.node_generated = len(self.heap) + self.visited
                 return self.result
 
-            self.explored.append(current)
+            self.visited += 1
             blank_x, blank_y = self.locate_tile(current.state, 0)
 
             for i in range(4):
@@ -163,6 +165,7 @@ class Puzzle(object):
 
                 puzzle = self.tuplify(puzzle)
                 if puzzle in self.visited:
+                    self.state_duplicated += 1
                     continue
                 self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth + 1 + self.heuristic(puzzle), current.depth + 1, current,
@@ -268,9 +271,10 @@ if __name__ == "__main__":
     print("%.4f" % (end - start))
 
     print(len(ans))
-    print("# of duplicated state:", len(puzzle.visited))
-    print("# of explored nodes:", len(puzzle.explored))
-    print("# of generated nodes:", len(puzzle.explored) + len(puzzle.heap))
+    print(ans)
+    print("# of duplicated state:", puzzle.state_duplicated)
+    print("# of explored nodes:", puzzle.node_visited)
+    print("# of generated nodes:", puzzle.node_generated)
 
     # print(ans) # Currently I just print the depth of the search
 
@@ -323,9 +327,9 @@ class MyTester_AStar3(object):
 
         totalNodes = maxSizeOfFrontier
         totalTime = end-start
-        numOfDupStates = len(puzzle.visited)
-        numOfExploredNodes = len(puzzle.explored)
-        numOfGenNodes =  len(puzzle.explored) + len(puzzle.heap)
+        numOfDupStates = puzzle.state_duplicated
+        numOfExploredNodes = puzzle.node_visited
+        numOfGenNodes = puzzle.node_generated
 
 
         return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
