@@ -146,9 +146,10 @@ def engine(n_size, num_of_cases, algo_name):
 
         newTestCase = {
             "algorithm": algo_name,
-            "self.node_generated": resultsTuple[2],
+            "self.node_generated": resultsTuple[4],
             "self.node_visited": resultsTuple[3],
-            "self.state_duplicated": resultsTuple[4],
+            "self.state_duplicated": resultsTuple[2],
+            # "self.total_nodes": resultsTuple[0],
             "self.total_time": resultsTuple[0],
             # "solution": resultsTuple[1],
             "max size of frontier": resultsTuple[5],
@@ -165,27 +166,27 @@ def engine(n_size, num_of_cases, algo_name):
 if __name__ == "__main__":
     # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
     # given for each n size
-    num_of_cases = 3
+    num_of_cases = 100
 
     # prep, generates the input files for n=3, 4, 5
-    genNTestCase(3, num_of_cases)
-    genNTestCase(4, num_of_cases)
-    genNTestCase(5, num_of_cases)
+    # genNTestCase(3, num_of_cases)
+    # genNTestCase(4, num_of_cases)
+    # genNTestCase(5, num_of_cases)
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
 
     # BFS runs n = 3 only
-    engine(3, num_of_cases, algo_names[0])
+    # engine(3, num_of_cases, algo_names[0])
 
-    for n_size in range(3, 6):
-        # # BFS
-        # engine(n_size, num_of_cases, algo_names[0])
-
-        # Manhattan
-        engine(n_size, num_of_cases, algo_names[1])
-
-        # h2: n-Max Swap
-        engine(n_size, num_of_cases, algo_names[2])
-
-        # h3: Number of tiles out of row + Number of tiles out of column
-        engine(n_size, num_of_cases, algo_names[3])
+    # for n_size in range(3, 6):
+    #     # # BFS
+    #     # engine(n_size, num_of_cases, algo_names[0])
+    #
+    #     # Manhattan
+    #     engine(n_size, num_of_cases, algo_names[1])
+    #
+    #     # h2: n-Max Swap
+    #     engine(n_size, num_of_cases, algo_names[2])
+    #
+    #     # h3: Number of tiles out of row + Number of tiles out of column
+    #     engine(n_size, num_of_cases, algo_names[3])
