@@ -149,7 +149,6 @@ def engine(n_size, num_of_cases, algo_name):
             "self.node_generated": resultsTuple[2],
             "self.node_visited": resultsTuple[3],
             "self.state_duplicated": resultsTuple[4],
-            # "self.total_nodes": resultsTuple[0],
             "self.total_time": resultsTuple[0],
             # "solution": resultsTuple[1],
             "max size of frontier": resultsTuple[5],
