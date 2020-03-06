@@ -3,7 +3,7 @@ import json
 import os
 from random import randint
 import subprocess
-from BFS import MyTester_BFS
+from CS3243_P1_25_1 import MyTester_BFS
 from CS3243_P1_25_2 import MyTester_AStar2
 from CS3243_P1_25_3 import MyTester_AStar3
 from CS3243_P1_25_4 import MyTester_AStar4
@@ -228,7 +228,6 @@ if __name__ == "__main__":
     engine(3, num_of_cases, algo_names[0])
 
     for n_size in range(3, 6):
-        # # BFS
 
         # Manhattan
         engine(n_size, num_of_cases, algo_names[1])

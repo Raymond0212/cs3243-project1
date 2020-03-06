@@ -1,29 +1,29 @@
 {
     "n_equals_3/input_1.txt": {
         "algorithm": "CS3243_P1_25_4",
-        "isSolutionCorrect": true,
+        "isSolutionCorrect": false,
         "max size of frontier": 7190,
         "self.node_generated": 21432,
         "self.node_visited": 14243,
         "self.state_duplicated": 2754,
-        "self.total_time": 131.33839464187622
+        "self.total_time": 167.22093296051025
     },
     "n_equals_3/input_2.txt": {
         "algorithm": "CS3243_P1_25_4",
-        "isSolutionCorrect": true,
+        "isSolutionCorrect": false,
         "max size of frontier": 1587,
         "self.node_generated": 4225,
         "self.node_visited": 2639,
         "self.state_duplicated": 272,
-        "self.total_time": 3.5674848556518555
+        "self.total_time": 4.187803506851196
     },
     "n_equals_3/input_3.txt": {
         "algorithm": "CS3243_P1_25_4",
-        "isSolutionCorrect": true,
+        "isSolutionCorrect": false,
         "max size of frontier": 2855,
         "self.node_generated": 7832,
         "self.node_visited": 4979,
         "self.state_duplicated": 593,
-        "self.total_time": 11.774520874023438
+        "self.total_time": 15.958362817764282
     }
 }
