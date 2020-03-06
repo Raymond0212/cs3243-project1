@@ -321,6 +321,7 @@ class MyTester_AStar2(object):
         self.input = input
 
     def test(self):
+        print(self.input)
         try:
             f = open(self.input, 'r')
         except IOError:

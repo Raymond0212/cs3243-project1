@@ -1,1 +1,72 @@
-{}
+{
+    "n_equals_3/input_1.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 439,
+        "total_nodes_generated": 1188,
+        "total_time_taken": 0.602414608001709
+    },
+    "n_equals_3/input_10.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 465,
+        "total_nodes_generated": 1238,
+        "total_time_taken": 0.5385591983795166
+    },
+    "n_equals_3/input_2.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 1007,
+        "total_nodes_generated": 2783,
+        "total_time_taken": 1.7882153987884521
+    },
+    "n_equals_3/input_3.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 20,
+        "total_nodes_generated": 44,
+        "total_time_taken": 0.014984846115112305
+    },
+    "n_equals_3/input_4.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 351,
+        "total_nodes_generated": 920,
+        "total_time_taken": 0.38399839401245117
+    },
+    "n_equals_3/input_5.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 252,
+        "total_nodes_generated": 669,
+        "total_time_taken": 0.26429104804992676
+    },
+    "n_equals_3/input_6.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 83,
+        "total_nodes_generated": 210,
+        "total_time_taken": 0.07182788848876953
+    },
+    "n_equals_3/input_7.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 31,
+        "total_nodes_generated": 71,
+        "total_time_taken": 0.022943496704101562
+    },
+    "n_equals_3/input_8.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 1673,
+        "total_nodes_generated": 4640,
+        "total_time_taken": 3.883592128753662
+    },
+    "n_equals_3/input_9.txt": {
+        "algorithm": "CS3243_P1_25_2",
+        "is_solution_correct": false,
+        "max_size_of_frontier": 87,
+        "total_nodes_generated": 220,
+        "total_time_taken": 0.07480788230895996
+    }
+}

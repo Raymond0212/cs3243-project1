@@ -102,9 +102,7 @@ def genTestCase(n, id):
 
 
 def genNTestCase(n_size, num_of_cases):
-    for i in range(n_size + 1, num_of_cases + n_size + 1):
-        # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
-        # Don't overwrite the given sample test cases
+    for i in range(1, num_of_cases + 1):
         genTestCase(n_size, i)
 
 
@@ -115,9 +113,8 @@ def engine(n_size, num_of_cases, algo_name):
     # for i in range(1, num_of_cases):
     #     genTestCase(n_size, i)
 
-    for i in range(1, num_of_cases + n_size + 1):
+    for i in range(1, num_of_cases + 1):
         print(str(n_size) + ";" + str(i))
-        # Reason for this is because there is 3 sample test case for n=3, 4 sample test case for n=4 and 5 sample test case for n=5
         inputFile = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         myTester = None
         algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
@@ -133,7 +130,7 @@ def engine(n_size, num_of_cases, algo_name):
         else:
             print("Error, algo not found")
 
-        # myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
+        # myTester returns a tuple containing totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
         resultsTuple = myTester.test()
 
         # testIfSolutionIsCorrect is a function that runs the solution found in the outputFile to see if the answer is correct
@@ -145,14 +142,14 @@ def engine(n_size, num_of_cases, algo_name):
 
         newTestCase = {
             "algorithm": algo_name,
-            "self.node_generated": resultsTuple[4],
-            "self.node_visited": resultsTuple[3],
-            "self.state_duplicated": resultsTuple[2],
+            "max_size_of_frontier": resultsTuple[5],
+            "total_nodes_generated": resultsTuple[4],
+            "total_time_taken": resultsTuple[0],
+            "is_solution_correct": passedTestCase
+            # "self.node_visited": resultsTuple[3],
+            # "self.state_duplicated": resultsTuple[2],
             # "self.total_nodes": resultsTuple[0],
-            "self.total_time": resultsTuple[0],
             # "solution": resultsTuple[1],
-            "max size of frontier": resultsTuple[5],
-            "isSolutionCorrect": passedTestCase
         }
 
         data[testName] = newTestCase
@@ -203,7 +200,7 @@ def testIfSolutionIsCorrect(n, input, solution):
 
     new_state = init_state
     no_of_moves = 0
-    print(solution)
+
     for x in range(0, len(solution)):
         temp_state = move(solution[x], new_state)
         if temp_state is not None:
@@ -215,7 +212,16 @@ def testIfSolutionIsCorrect(n, input, solution):
 if __name__ == "__main__":
     # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
     # given for each n size
-    num_of_cases = 0
+    num_of_cases = 10
+
+    if not os.path.exists('n_equals_3'):
+        os.makedirs('n_equals_3')
+
+    if not os.path.exists('n_equals_4'):
+        os.makedirs('n_equals_4')
+
+    if not os.path.exists('n_equals_5'):
+        os.makedirs('n_equals_5')
 
     # prep, generates the input files for n=3, 4, 5
     genNTestCase(3, num_of_cases)
@@ -224,8 +230,8 @@ if __name__ == "__main__":
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
 
-    # BFS runs n = 3 only
-    engine(3, num_of_cases, algo_names[0])
+    # # BFS runs n = 3 only
+    # engine(3, num_of_cases, algo_names[0])
 
     for n_size in range(3, 6):
 
