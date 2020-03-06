@@ -282,9 +282,9 @@ if __name__ == "__main__":
 
     # print(ans) # Currently I just print the depth of the search
 
-    # with open(sys.argv[2], 'a') as f:
-    #     for answer in ans:
-    #         f.write(answer+'\n')
+    with open(sys.argv[2], 'a') as f:
+        for answer in ans:
+            f.write(answer+'\n')
 
 class MyTester_AStar3(object):
     def __init__(self, input):
@@ -334,6 +334,5 @@ class MyTester_AStar3(object):
         numOfDupStates = puzzle.state_duplicated
         numOfExploredNodes = puzzle.node_visited
         numOfGenNodes = puzzle.node_generated
-
 
         return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
