@@ -2,13 +2,28 @@
     "n_equals_3/input_1.txt": {
         "algorithm": "CS3243_P1_25_3",
         "isSolutionCorrect": false,
-        "self.node_generated": 3,
-        "self.node_visited": 0,
-        "self.state_duplicated": 0,
-        "self.total_nodes": 0,
-        "self.total_time": 0.0,
-        "solution": [
-            "No Answer"
-        ]
+        "max size of frontier": 7696,
+        "self.node_generated": 21229,
+        "self.node_visited": 13534,
+        "self.state_duplicated": 2154,
+        "self.total_time": 160.11717891693115
+    },
+    "n_equals_3/input_2.txt": {
+        "algorithm": "CS3243_P1_25_3",
+        "isSolutionCorrect": true,
+        "max size of frontier": 3301,
+        "self.node_generated": 8613,
+        "self.node_visited": 5313,
+        "self.state_duplicated": 593,
+        "self.total_time": 21.634209394454956
+    },
+    "n_equals_3/input_3.txt": {
+        "algorithm": "CS3243_P1_25_3",
+        "isSolutionCorrect": true,
+        "max size of frontier": 8240,
+        "self.node_generated": 22600,
+        "self.node_visited": 14361,
+        "self.state_duplicated": 2158,
+        "self.total_time": 146.79365825653076
     }
 }

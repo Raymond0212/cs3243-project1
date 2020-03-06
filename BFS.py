@@ -237,4 +237,4 @@ class MyTester_BFS(object):
         puzzle = Puzzle(init_state, goal_state)
         solution = puzzle.solve()
 
-        return solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
+        return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier

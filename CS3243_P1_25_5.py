@@ -7,7 +7,6 @@ from BFS import MyTester_BFS
 from CS3243_P1_25_2 import MyTester_AStar2
 from CS3243_P1_25_3 import MyTester_AStar3
 from CS3243_P1_25_4 import MyTester_AStar4
-from TestCaseTester import testPls
 
 
 def find_zero(state):
@@ -137,8 +136,8 @@ def engine(n_size, num_of_cases, algo_name):
         # myTester returns a tuple containing totalNodes, totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes
         resultsTuple = myTester.test()
 
-        # testPls is a function that runs the solution found in the outputFile to see if the answer is correct
-        passedTestCase = testPls(n_size, inputFile, resultsTuple[1])
+        # testIfSolutionIsCorrect is a function that runs the solution found in the outputFile to see if the answer is correct
+        passedTestCase = testIfSolutionIsCorrect(n_size, inputFile, resultsTuple[1])
         testName = "n_equals_" + str(n_size) + "/input_" + str(i) + ".txt"
         data = {}
         with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'r') as f:
@@ -162,6 +161,56 @@ def engine(n_size, num_of_cases, algo_name):
         with open("summary_n" + str(n_size) + "_" + algo_name + ".txt", 'w') as f:
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
 
+def testIfSolutionIsCorrect(n, input, solution):
+    try:
+        f = open(input, 'r')
+    except IOError:
+        raise IOError("Input file not found!")
+
+    lines = f.readlines()
+
+    # max_num = n to the power of 2 - 1
+    max_num = n ** 2 - 1
+
+    init_state = [[0 for i in range(n)] for j in range(n)]
+    goal_state = [[0 for i in range(n)] for j in range(n)]
+
+    i, j = 0, 0
+    for line in lines:
+        for number in line.split(" "):
+            if number == '':
+                continue
+            value = int(number, base=10)
+            if 0 <= value <= max_num:
+                init_state[i][j] = value
+                j += 1
+                if j == n:
+                    i += 1
+                    j = 0
+
+    if solution == ["UNSOLVABLE"]:
+        return True
+
+    # Instantiate a 2D list of size n x n
+    goal_state = [[0 for i in range(n)] for j in range(n)]
+
+
+    directions = ["RIGHT", "LEFT", "UP", "DOWN"]
+
+    for i in range(1, max_num + 1):
+        goal_state[(i - 1) // n][(i - 1) % n] = i
+    goal_state[n - 1][n - 1] = 0
+
+    new_state = init_state
+    no_of_moves = 0
+    print(solution)
+    for x in range(0, len(solution)):
+        temp_state = move(solution[x], new_state)
+        if temp_state is not None:
+            no_of_moves = no_of_moves + 1
+            new_state = temp_state
+
+    return (new_state == goal_state)
 
 if __name__ == "__main__":
     # Change this for the number of input files you want to create and test with (Excluding the 3 sample test cases
@@ -169,18 +218,17 @@ if __name__ == "__main__":
     num_of_cases = 0
 
     # prep, generates the input files for n=3, 4, 5
-    # genNTestCase(3, num_of_cases)
-    # genNTestCase(4, num_of_cases)
-    # genNTestCase(5, num_of_cases)
+    genNTestCase(3, num_of_cases)
+    genNTestCase(4, num_of_cases)
+    genNTestCase(5, num_of_cases)
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
 
     # BFS runs n = 3 only
-    # engine(3, num_of_cases, algo_names[0])
+    engine(3, num_of_cases, algo_names[0])
 
     for n_size in range(3, 6):
         # # BFS
-        # engine(n_size, num_of_cases, algo_names[0])
 
         # Manhattan
         engine(n_size, num_of_cases, algo_names[1])
