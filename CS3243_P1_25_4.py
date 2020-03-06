@@ -5,6 +5,7 @@ import sys
 import heapq
 import time
 import copy
+import gc
 
 maxSizeOfFrontier = 0
 """
@@ -15,7 +16,7 @@ __str__, __eq__, __ne__, __lt__, __gt__, __le__, __ge__ are overided
 
 
 class Node:
-    def __init__(self, state, cost, depth, parent, move=None):
+    def __init__(self, state, cost, depth, parent, move=[]):
         self.state = state
         self.cost = cost
         self.parent = parent
@@ -67,9 +68,10 @@ class Puzzle(object):
         # self.actions = list()   # List of actions
         self.size = len(init_state)
         self.visited = set(self.init_state)  # Check is the state has appeared or not
-        self.explored, self.result, self.heap = [], [], []
+        self.result, self.heap = [], []
         self.goal_position = {}
         self.rank = {}
+        self.state_duplicated, self.node_visited, self.node_generated = 0, 0, 0
         for x, row in enumerate(goal_state):
             for y, ele in enumerate(row):
                 self.goal_position[ele] = (x, y)
@@ -121,7 +123,7 @@ class Puzzle(object):
         global maxSizeOfFrontier
 
         if not self.solvability(self.init_state):
-            return ["No Answer"]
+            return ["UNSOLVABLE"]
 
         source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
         self.heap = [(source.cost, source)]
@@ -135,20 +137,21 @@ class Puzzle(object):
         """
         while len(self.heap) != 0:
 
+            gc.collect()
             # max size of frontier
             if len(self.heap) > maxSizeOfFrontier:
                 maxSizeOfFrontier = len(self.heap)
 
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
-                self.show_path(current)
-                return self.result
+                self.node_generated = len(self.heap) + self.node_visited
+                return current.move
 
-            self.explored.append(current)
+            self.node_visited += 1
             blank_x, blank_y = self.locate_tile(current.state, 0)
 
             for i in range(4):
-                if current.move is not None and i == (3 - ACTION.index(current.move)):  # Don't move back
+                if len(current.move) > 0 and i == (3 - ACTION.index(current.move[len(current.move)-1])):  # Don't move back
                     continue
 
                 puzzle = self.listify(current.state)
@@ -159,15 +162,19 @@ class Puzzle(object):
                         or blank_y + dy >= self.size:
                     continue
                 puzzle[blank_x][blank_y] = puzzle[blank_x + dx][blank_y + dy]
+
                 puzzle[blank_x + dx][blank_y + dy] = 0
 
                 puzzle = self.tuplify(puzzle)
                 if puzzle in self.visited:
+                    self.state_duplicated += 1
                     continue
                 self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth + 1 + self.heuristic(puzzle), current.depth + 1, current,
-                                 ACTION[i])
+                                 current.move + [ACTION[i]])
                 heapq.heappush(self.heap, (next_node.cost, next_node))
+
+            del current
 
         return ["No Answer"]
 
@@ -245,10 +252,11 @@ if __name__ == "__main__":
     print("%.4f" % (end - start))
 
     print(len(ans))
-    print("# of duplicated state:", len(puzzle.visited))
-    print("# of explored nodes:", len(puzzle.explored))
-    print("# of generated nodes:", len(puzzle.explored) + len(puzzle.heap))
-
+    print(ans)
+    print("# of duplicated state:", puzzle.state_duplicated)
+    print("# of explored nodes:", puzzle.node_visited)
+    print("# of generated nodes:", puzzle.node_generated)
+  
     # print(ans) # Currently I just print the depth of the search
 
     with open(sys.argv[2], 'a') as f:
@@ -297,12 +305,11 @@ class MyTester_AStar4(object):
         start = time.time()
         solution = puzzle.solve()
         end = time.time()
-
+        
         totalNodes = maxSizeOfFrontier
         totalTime = end-start
-        numOfDupStates = len(puzzle.visited)
-        numOfExploredNodes = len(puzzle.explored)
-        numOfGenNodes =  len(puzzle.explored) + len(puzzle.heap)
-
+        numOfDupStates = puzzle.state_duplicated
+        numOfExploredNodes = puzzle.node_visited
+        numOfGenNodes = puzzle.node_generated
 
         return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier

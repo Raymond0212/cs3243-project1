@@ -96,22 +96,22 @@ class Puzzle(object):
         pos = self.findEmptySquare(newstate)
         posx = pos[0]
         posy = pos[1]
-        if direction == "UP" and posy > 0:
+        if direction == "DOWN" and posy > 0:
             temp = newstate[posy - 1][posx]
             newstate[posy - 1][posx] = 0
             newstate[posy][posx] = temp
             return newstate
-        elif direction == "DOWN" and posy < len(newstate) - 1:
+        elif direction == "UP" and posy < len(newstate) - 1:
             temp = newstate[posy + 1][posx]
             newstate[posy + 1][posx] = 0
             newstate[posy][posx] = temp
             return newstate
-        elif direction == "LEFT" and posx > 0:
+        elif direction == "RIGHT" and posx > 0:
             temp = newstate[posy][posx - 1]
             newstate[posy][posx - 1] = 0
             newstate[posy][posx] = temp
             return newstate
-        elif direction == "RIGHT" and posx < len(newstate[0]) - 1:
+        elif direction == "LEFT" and posx < len(newstate[0]) - 1:
             temp = newstate[posy][posx + 1]
             newstate[posy][posx + 1] = 0
             newstate[posy][posx] = temp
@@ -237,4 +237,4 @@ class MyTester_BFS(object):
         puzzle = Puzzle(init_state, goal_state)
         solution = puzzle.solve()
 
-        return solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier
+        return totalTime, solution, numOfDupStates, numOfExploredNodes, numOfGenNodes, maxSizeOfFrontier

@@ -1,14 +1,9 @@
 {
     "n_equals_3/input_1.txt": {
         "algorithm": "CS3243_P1_25_3",
-        "isSolutionCorrect": false,
-        "self.node_generated": 3,
-        "self.node_visited": 0,
-        "self.state_duplicated": 0,
-        "self.total_nodes": 0,
-        "self.total_time": 0.0,
-        "solution": [
-            "No Answer"
-        ]
+        "is_solution_correct": false,
+        "max_size_of_frontier": 1277,
+        "total_nodes_generated": 3416,
+        "total_time_taken": 2.487377405166626
     }
 }

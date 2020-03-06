@@ -5,6 +5,7 @@ import sys
 import heapq
 import time
 import copy
+import gc
 
 maxSizeOfFrontier = 0
 """
@@ -15,7 +16,7 @@ __str__, __eq__, __ne__, __lt__, __gt__, __le__, __ge__ are overided
 
 
 class Node:
-    def __init__(self, state, cost, depth, parent, move=None):
+    def __init__(self, state, cost, depth, parent, move=[]):
         self.state = state
         self.cost = cost
         self.parent = parent
@@ -67,7 +68,7 @@ class Puzzle(object):
         # self.actions = list()   # List of actions
         self.size = len(init_state)
         self.visited = set(self.init_state)  # Check is the state has appeared or not
-        self.explored, self.result, self.heap = [], [], []
+        self.result, self.heap = [], []
         self.goal_position = {}
         self.rank = {}
         self.state_duplicated, self.node_visited, self.node_generated = 0, 0, 0
@@ -85,13 +86,6 @@ class Puzzle(object):
             for y, tile in enumerate(row):
                 if tile == a:
                     return (x, y)
-
-    def show_path(self, head):
-        if head.parent is not None:
-            self.show_path(head.parent)
-        if head.move is not None:
-            # print(head)
-            self.result.append(head.move)
 
     def tuplify(self, list_2d):
         return tuple(map(tuple, list_2d))
@@ -122,9 +116,9 @@ class Puzzle(object):
         global maxSizeOfFrontier
 
         if not self.solvability(self.init_state):
-            return ["No Answer"]
+            return ["UNSOLVABLE"]
 
-        source = Node(self.init_state, self.heuristic(self.init_state), 0, None)
+        source = Node(self.init_state, self.heuristic(self.init_state), 0, [])
         self.heap = [(source.cost, source)]
         heapq.heapify(self.heap)
         ACTION = ["UP", "LEFT", "RIGHT", "DOWN"]
@@ -136,22 +130,21 @@ class Puzzle(object):
         """
         while len(self.heap) != 0:
 
+            gc.collect()
             # max size of frontier
             if len(self.heap) > maxSizeOfFrontier:
                 maxSizeOfFrontier = len(self.heap)
 
             current = heapq.heappop(self.heap)[1]
             if self.check_state(current.state):
-                self.show_path(current)
-                self.node_generated = len(self.heap) + len(self.explored)
-                self.node_visited = len(self.explored)
-                return self.result
+                self.node_generated = len(self.heap) + self.node_visited
+                return current.move
 
-            self.explored.append(current)
+            self.node_visited += 1
             blank_x, blank_y = self.locate_tile(current.state, 0)
 
             for i in range(4):
-                if current.move is not None and i == (3 - ACTION.index(current.move)):  # Don't move back
+                if len(current.move) > 0 and i == (3 - ACTION.index(current.move[len(current.move)-1])):  # Don't move back
                     continue
 
                 puzzle = self.listify(current.state)
@@ -162,6 +155,7 @@ class Puzzle(object):
                         or blank_y + dy >= self.size:
                     continue
                 puzzle[blank_x][blank_y] = puzzle[blank_x + dx][blank_y + dy]
+
                 puzzle[blank_x + dx][blank_y + dy] = 0
 
                 puzzle = self.tuplify(puzzle)
@@ -170,8 +164,10 @@ class Puzzle(object):
                     continue
                 self.visited.add(puzzle)
                 next_node = Node(puzzle, current.depth + 1 + self.heuristic(puzzle), current.depth + 1, current,
-                                 ACTION[i])
+                                 current.move + [ACTION[i]])
                 heapq.heappush(self.heap, (next_node.cost, next_node))
+
+            del current
 
         return ["No Answer"]
 
@@ -325,6 +321,7 @@ class MyTester_AStar2(object):
         self.input = input
 
     def test(self):
+        print(self.input)
         try:
             f = open(self.input, 'r')
         except IOError:
