@@ -230,8 +230,8 @@ if __name__ == "__main__":
 
     algo_names = ["BFS", "CS3243_P1_25_2", "CS3243_P1_25_3", "CS3243_P1_25_4"]
 
-    # # BFS runs n = 3 only
-    # engine(3, num_of_cases, algo_names[0])
+    # BFS runs n = 3 only
+    engine(3, num_of_cases, algo_names[0])
 
     for n_size in range(3, 6):
 
